@@ -51,3 +51,8 @@ Temporary Items
 work/
 *.swp
 transcript
+
+
+
+#intellij files
+.idea/
