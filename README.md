@@ -1,1 +1,2 @@
-# Project_ARCH_2
+# Introduction
+- This is an implementation of a simplified pipepeline microprocesser. 
