@@ -1,5 +1,47 @@
 m255
 K3
+z0
 13
 cModel Technology
 dC:\altera\12.1sp1\modelsim_ase
+Ealu_operands
+Z0 w1524105953
+Z1 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z4 d/media/mohamed/8A9CDD219CDD0899/ModelSim/modelsim_ase/linuxaloem/Arch-Final/Project_ARCH_2
+Z5 8/media/mohamed/8A9CDD219CDD0899/ModelSim/modelsim_ase/linuxaloem/Arch-Final/Project_ARCH_2/ALU-Operands.vhd
+Z6 F/media/mohamed/8A9CDD219CDD0899/ModelSim/modelsim_ase/linuxaloem/Arch-Final/Project_ARCH_2/ALU-Operands.vhd
+l0
+L10
+VZZkKFRH@4eeJC<c<a5XN32
+!s100 D81AFRhDM[k[PBdjDNSdC0
+Z7 OV;C;10.5c;63
+32
+Z8 !s110 1524105954
+!i10b 1
+Z9 !s108 1524105954.000000
+Z10 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|/media/mohamed/8A9CDD219CDD0899/ModelSim/modelsim_ase/linuxaloem/Arch-Final/Project_ARCH_2/ALU-Operands.vhd|
+Z11 !s107 /media/mohamed/8A9CDD219CDD0899/ModelSim/modelsim_ase/linuxaloem/Arch-Final/Project_ARCH_2/ALU-Operands.vhd|
+!i113 1
+Z12 o-work work -2002 -explicit
+Z13 tExplicit 1 CvgOpt 0
+Aalu_operands_arch
+R1
+R2
+R3
+DEx4 work 12 alu_operands 0 22 ZZkKFRH@4eeJC<c<a5XN32
+l50
+L48
+VAVO1_oER@haQ]AoCLVbcG1
+!s100 9m282z6E0VXK6J4Qh92B61
+R7
+32
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 1
+R12
+R13
