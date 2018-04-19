@@ -19,4 +19,3 @@ ELSIF rising_edge(clk) and en='1' THEN
 END IF;
 END PROCESS;
 END a_reg;
-
