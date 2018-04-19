@@ -4,20 +4,20 @@ USE IEEE.STD_LOGIC_1164.ALL;
 ENTITY MEMORY IS
 	PORT(
 
-		-------------------- CONTROL SIGNALS -----------------------
-		MEM_READ:									   IN std_logic;
-		MEM_WRITE:									   IN std_logic;
-		IBUBBLE_IN:									   IN std_logic;
-		INT:										   IN std_logic;
-		WB_SIGNALS_IN:				IN std_logic_vector(2 DOWNTO 0);
-		OPCODE_IN:					IN std_logic_vector(2 DOWNTO 0);
-		PREV_OPCODE:				IN std_logic_vector(2 DOWNTO 0);
-		------------------------------------------------------------
+		-------------------- CONTROL SIGNALS ------------------------
+		MEM_READ:										IN std_logic;
+		MEM_WRITE:										IN std_logic;
+		IBUBBLE_IN:										IN std_logic;
+		INT:											IN std_logic;
+		WB_SIGNALS_IN:				 IN std_logic_vector(2 DOWNTO 0);
+		OPCODE_IN:					 IN std_logic_vector(2 DOWNTO 0);
+		PREV_OPCODE:				 IN std_logic_vector(2 DOWNTO 0);
+		-------------------------------------------------------------
 
-		------------------ REGISTERS SELECTION ---------------------
-		Rdst_INDEX_IN:				IN std_logic_vector(2 DOWNTO 0);
-		Rsrc_INDEX_IN:				IN std_logic_vector(2 DOWNTO 0);
-		------------------------------------------------------------
+		------------------ REGISTERS SELECTION ----------------------
+		Rdst_INDEX_IN:				 IN std_logic_vector(2 DOWNTO 0);
+		Rsrc_INDEX_IN:				 IN std_logic_vector(2 DOWNTO 0);
+		-------------------------------------------------------------
 
 		---------------------- INPUT DATA ----------------------------
 		DATA:						 IN std_logic_vector(15 DOWNTO 0);
@@ -33,23 +33,23 @@ ENTITY MEMORY IS
 
 
 		-------------------- CONTROL SIGNALS -------------------------
-		IBUBBLE_OUT: 									OUT std_logic;
-		RAM_WRITE_EN: 									OUT std_logic;
+		IBUBBLE_OUT:									OUT std_logic;
+		RAM_WRITE_EN:									OUT std_logic;
 		RAM_READ_EN:									OUT std_logic;
 		WB_SIGNALS_OUT:				 OUT std_logic_vector(2 DOWNTO 0);
-		OPCODE_OUT: 				 OUT std_logic_vector(2 DOWNTO 0);
+		OPCODE_OUT:					 OUT std_logic_vector(2 DOWNTO 0);
 		--------------------------------------------------------------
 
 		---------------------- OUTPUT DATA ---------------------------
 		RAM_VALUE_or_DST_RESULT:	OUT std_logic_vector(15 DOWNTO 0);
-		SRC_RESULT: 				OUT std_logic_vector(15 DOWNTO 0);
-		RAM_DATA_IN: 				OUT std_logic_vector(15 DOWNTO 0);
-		RAM_ADDRESS: 				OUT std_logic_vector(15 DOWNTO 0);
+		SRC_RESULT:					OUT std_logic_vector(15 DOWNTO 0);
+		RAM_DATA_IN:				OUT std_logic_vector(15 DOWNTO 0);
+		RAM_ADDRESS:				OUT std_logic_vector(15 DOWNTO 0);
 		--------------------------------------------------------------
 
 		------------------ REGISTERS SELECTION ----------------------
-		Rdst_INDEX_OUT: 			OUT std_logic_vector(2 DOWNTO 0);
-		Rsrc_INDEX_OUT: 			OUT std_logic_vector(2 DOWNTO 0)
+		Rdst_INDEX_OUT:				OUT std_logic_vector(2 DOWNTO 0);
+		Rsrc_INDEX_OUT:				OUT std_logic_vector(2 DOWNTO 0)
 		-------------------------------------------------------------
 
 	);
@@ -57,7 +57,7 @@ END MEMORY;
 
 ARCHITECTURE MEMORY_ARCH OF MEMORY IS
 
------------------------- OPCODE BITS ---------------------------------
+------------------------- OPCODE BITS --------------------------------
 CONSTANT OPCODE_POP_or_LOAD: 	std_logic_vector(2 downto 0) := "000";
 CONSTANT OPCODE_PUSH_or_STORE:  std_logic_vector(2 downto 0) := "111";
 CONSTANT OPCODE_RET: 			std_logic_vector(2 downto 0) := "001";
