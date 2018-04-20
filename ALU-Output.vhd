@@ -61,7 +61,7 @@ BEGIN
 
 
 	destination <=
-		dst_from_operands_selection_unit	when (opcode)
+		dst_from_operands_selection_unit	when (opcode=LDM)
 	else
 		alu_dst_output;
 
