@@ -38,6 +38,7 @@ ENTITY alu_output_selection IS
 		: OUT std_logic_vector(15 DOWNTO 0)
 		------------------------- Possible Result DST operands />-------------------------------
 
+
 						 );
 END ENTITY alu_output_selection;
 
@@ -47,21 +48,21 @@ ARCHITECTURE alu_output_selection_arch OF alu_output_selection IS
 	CONSTANT POP :std_logic_vector(4 downto 0):="01110";
 	CONSTANT LDD :std_logic_vector(4 downto 0):="11110";--TODO check what Decode stage is sending!
 	CONSTANT STD :std_logic_vector(4 downto 0):="11111";--TODO check what Decode stage is sending!
+	CONSTANT LDM :std_logic_vector(4 downto 0):="11101";--TODO check what Decode stage is sending!
 BEGIN
 	result_src <= 
 		current_SP							when (opcode=POP)
 	else
 		buffered_SP							when (opcode=PUSH)
 	else
-		(others<='0')&EA_unextended 		when (src_in_result_dst='1')
+		(others<='0')&EA_unextended 		when (opcode=LDD OR opcode=STD)
 	else
 		alu_src_output;
 
 
 	destination <=
-		dst_from_operands_selection_unit	when (dst_in_mem='1')
+		dst_from_operands_selection_unit	when (opcode)
 	else
 		alu_dst_output;
 
 END alu_output_selection_arch;
-
