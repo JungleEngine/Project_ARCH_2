@@ -110,7 +110,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
 	ELSIF IR(15) = '0' and (IR(14 downto 10) = CONST_OPCODE_JMP or IR(14 downto 10) = CONST_OPCODE_JZ  
 	or IR(14 downto 10) = CONST_OPCODE_JC or IR(14 downto 10) = CONST_OPCODE_JN) THEN
   		MEM_SIGNALS <= "00";
-  		WB_SIGNALS <= "01";
+  		WB_SIGNALS <= "00";
   		RSRC <= (others=>'0');
   		RDST <= IR(9 downto 7);
   		BRANCH_DETECTED <= '1';  

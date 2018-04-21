@@ -5,7 +5,8 @@ USE IEEE.STD_LOGIC_SIGNED.all;
 
 -- FLAGS
 -- Z-N-C
-ENTITY INSTRUCTION_DECODER IS
+-- also output old pc if stall.
+ENTITY BRANCH_DETECTOR IS
  PORT (	BRANCH_DETECTED 		: in std_logic;
  		DH_STALL 				: in std_logic;
 		FLAGS_REG_OUTPUT 		: in std_logic_vector(3 downto 0);
@@ -17,9 +18,9 @@ ENTITY INSTRUCTION_DECODER IS
  		FLAGS_REG_WRITE     	: out std_logic;
  		DECODING_STAGE_OUTPUT 	: out std_logic_vector(8 downto 0)
        );
-END ENTITY INSTRUCTION_DECODER;
+END ENTITY BRANCH_DETECTOR;
 
-ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS  
+ARCHITECTURE ARCH OF BRANCH_DETECTOR IS  
 	
 	-- Opcodes constants.
 	CONSTANT CONST_OPCODE_JMP 	: std_logic_vector(4 downto 0):="10100";
