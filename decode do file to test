@@ -1,0 +1,32 @@
+decode do file to test
+
+vsim -gui work.decode
+add wave sim:/decode/*
+
+# pop, 	Rdst = 011, expected-> sp increment.
+force -freeze sim:/decode/IR 0011100110000000 0
+
+force -freeze sim:/decode/SP 000000000 0
+
+force -freeze sim:/decode/I_BUBBLE 0 0
+
+run
+
+# test jump (10100) Rdst = 011, 
+force -freeze sim:/decode/IR 0101000110000000 0
+
+force -freeze sim:/decode/SP 000000000 0
+
+force -freeze sim:/decode/I_BUBBLE 0 0
+
+run
+
+# test stall, ALU_MEM_R = 1 and Rdst = ALU_RDST = 011, opcode = JMP.
+force -freeze sim:/decode/ALU_MEMR 1 0
+
+force -freeze sim:/decode/IR 0101000110000000 0
+
+force -freeze sim:/decode/I_BUBBLE 0 0
+
+force -freeze sim:/decode/ALU_RDST 011 0
+

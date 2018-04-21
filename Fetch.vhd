@@ -54,7 +54,7 @@ ARCHITECTURE ARCH OF FETCH IS
     IR_OUTPUT_TO_DECODE <= SIG_IR_MUX_OUTPUT;
 
     -- PC + 2.
-    SIG_PC_PLUS_2 <=  std_logic_vector(unsigned(PC) + 2);
+    SIG_PC_PLUS_2 <=  std_logic_vector(unsigned(PC) + 1);
     
     -- IR mux output.
     IF SELECTOR_IR_OUT = '0' THEN

@@ -1,0 +1,24 @@
+decode forwarding cases
+
+----BRANCH-------
+(NO FORWARD)
+ LDD R5      F|D|E|M|W
+ BR R5         F|D|D|D|E
+
+(ALU TO DECODE)
+ADD R5,R4    F|D|E|M|W
+MOV R3,R2      F|D|E|M|W
+BR  R5          |F|D|E|M|W
+
+(ALU TO DECODE, check wether source or destination should be forwarded)
+MUL R5,R4    F|D|E|M|W
+BR R5          F|D|E|M|W
+
+(NO FORWARD)
+LDD R5      F|D|E|M|W
+Add R4,R3     F|D|E|M|W
+BR R5          |F|D|D
+
+IF WB
+	IF RDST = ALU_RDST ( or SRC in MUL) 
+------------------------

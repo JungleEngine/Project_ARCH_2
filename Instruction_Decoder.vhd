@@ -136,7 +136,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		MEM_SIGNALS <= "01";
   		WB_SIGNALS <= "00";
   		RSRC <= (others=>'0');
-  		RDST <= IR(9 downto 0);
+  		RDST <= IR(9 downto 7);
   		BRANCH_DETECTED <= '0';  
   		SIG_POP_DETECTED <= '0';
   		SIG_PUSH_DETECTED <= '1';
@@ -148,7 +148,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		MEM_SIGNALS <= "10";
   		WB_SIGNALS <= "01";
   		RSRC <= (others=>'0');
-  		RDST <= IR(9 downto 0);
+  		RDST <= IR(9 downto 7);
   		BRANCH_DETECTED <= '0';  
   		SIG_POP_DETECTED <= '1';
   		SIG_PUSH_DETECTED <= '0';
