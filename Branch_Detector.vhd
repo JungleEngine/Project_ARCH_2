@@ -14,6 +14,7 @@ ENTITY INSTRUCTION_DECODER IS
  		
  		FLAGS_REG_INPUT			: out std_logic_vector(3 downto 0);
  		BRANCH_TAKEN 			: out std_logic;
+ 		FLAGS_REG_WRITE     	: out std_logic;
  		DECODING_STAGE_OUTPUT 	: out std_logic_vector(8 downto 0)
        );
 END ENTITY INSTRUCTION_DECODER;
@@ -42,27 +43,37 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
 	  		-- Check if JMP
 	  		iF OPCODE = CONST_OPCODE_JMP THEN
 	  			BRANCH_TAKEN <= '1';
+	  			FLAGS_REG_WRITE <= '0';
 	  			FLAGS_REG_INPUT <=	FLAGS_REG_OUTPUT;
 		  	
 		  	-- Check zero flag = 1.
 		  	ELSIF OPCODE = CONST_OPCODE_JZ and FLAGS_REG_OUTPUT(3) = '1' THEN
 		  		BRANCH_TAKEN <= '1';
+		  		FLAGS_REG_WRITE <= '1';
 		  		FLAGS_REG_INPUT <= ('0' & FLAGS_REG_OUTPUT(2 downto 0));
 
 	  		-- Check negative flag = 1.
 	  		ELSIF OPCODE = CONST_OPCODE_JN and FLAGS_REG_OUTPUT(2) = '1' THEN
 	  			BRANCH_TAKEN <= '1';
+	  			FLAGS_REG_WRITE <= '1';
 	  			FLAGS_REG_INPUT <= (FLAGS_REG_OUTPUT(3) & FLAGS_REG_OUTPUT(2) & '0' & FLAGS_REG_OUTPUT(0));
 
 			-- Check carry flag = 1.
 			ELSIF OPCODE = CONST_OPCODE_JC and FLAGS_REG_OUTPUT(1) = '1' THEN
 				BRANCH_TAKEN <= '1';
+				FLAGS_REG_WRITE <= '1';
 				FLAGS_REG_INPUT <= (FLAGS_REG_OUTPUT(3) & '0' & FLAGS_REG_OUTPUT(1 downto 0));
 			ELSE 
 				BRANCH_TAKEN <='0';
+				FLAGS_REG_WRITE <= '0';
 				FLAGS_REG_INPUT <= FLAGS_REG_OUTPUT;
 		  	END IF;
 	  	END IF; 
+	ELSE 
+	BRANCH_TAKEN <='0';
+	FLAGS_REG_WRITE <= '0';
+	FLAGS_REG_INPUT <= FLAGS_REG_OUTPUT;
+
   	END IF;
   END PROCESS;
 END ARCH;
