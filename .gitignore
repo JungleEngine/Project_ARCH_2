@@ -49,6 +49,7 @@ Temporary Items
 *.wlf
 *.vstf
 work/*
+work/_info
 *.swp
 transcript
 
