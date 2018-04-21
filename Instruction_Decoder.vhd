@@ -6,7 +6,7 @@ USE IEEE.STD_LOGIC_SIGNED.all;
 ENTITY INSTRUCTION_DECODER IS
  PORT (	I_BUBBLE 			: in std_logic;
  		OPCODE_FROM_EXECUTE : in std_logic_vector(4 downto 0);
- 		IR 					: in std_logic_vector(15 downto 0);
+ 		IR 					: in std_logic_vector( 15 downto 0);
 		
 		BRANCH_DETECTED  	: out std_logic;
 		SIG_POP_DETECTED 	: out std_logic;
@@ -57,7 +57,12 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   BEGIN
   PROCESS(OPCODE_FROM_EXECUTE, I_BUBBLE, IR)
   BEGIN  
-
+-- DOne : 
+-- 1-NOP
+-- 2-ADD
+-- 3-MUL
+-- 4-SUB
+-- 5-AND
   	-- For LDM , so IR now has  immediate value
   	IF OPCODE_FROM_EXECUTE = CONST_OPCODE_LDM or I_BUBBLE = '1' or IR = (x"0000") THEN 
   		MEM_SIGNALS <= (others=>'0');
@@ -108,7 +113,8 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
 	
 	-- Check Branch value in destination.
 	ELSIF IR(15) = '0' and (IR(14 downto 10) = CONST_OPCODE_JMP or IR(14 downto 10) = CONST_OPCODE_JZ  
-	or IR(14 downto 10) = CONST_OPCODE_JC or IR(14 downto 10) = CONST_OPCODE_JN) THEN
+	or IR(14 downto 10) = CONST_OPCODE_JC or IR(14 downto 10) = CONST_OPCODE_JN) 
+  or IR(14 downto 10) = CONST_OPCODE_CALL THEN
   		MEM_SIGNALS <= "00";
   		WB_SIGNALS <= "00";
   		RSRC <= (others=>'0');
@@ -190,6 +196,160 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		SIG_PUSH_DETECTED <= '0';
   		OPCODE <= CONST_OPCODE_SUB;		
   		OUTPUT_VALUE <= (others=>'0');
+
+    -- Check AND.
+  ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_AND THEN
+      MEM_SIGNALS <= "00";
+      WB_SIGNALS <= "01";
+      RSRC <= IR(9 downto 7);
+      RDST <= IR(6 downto 4);
+      BRANCH_DETECTED <= '0';  
+      SIG_POP_DETECTED <= '0';
+      SIG_PUSH_DETECTED <= '0';
+      OPCODE <= CONST_OPCODE_AND;   
+      OUTPUT_VALUE <= (others=>'0');
+
+  -- Check OR.
+  ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_OR THEN
+      MEM_SIGNALS <= "00";
+      WB_SIGNALS <= "01";
+      RSRC <= IR(9 downto 7);
+      RDST <= IR(6 downto 4);
+      BRANCH_DETECTED <= '0';  
+      SIG_POP_DETECTED <= '0';
+      SIG_PUSH_DETECTED <= '0';
+      OPCODE <= CONST_OPCODE_OR;   
+      OUTPUT_VALUE <= (others=>'0');
+
+  -- Check RLC.
+  ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_RLC THEN
+      MEM_SIGNALS <= "00";
+      WB_SIGNALS <= "01";
+      RSRC <= (others=>'0');
+      RDST <= IR(9 downto 7);
+      BRANCH_DETECTED <= '0';  
+      SIG_POP_DETECTED <= '0';
+      SIG_PUSH_DETECTED <= '0';
+      OPCODE <= CONST_OPCODE_RLC;   
+      OUTPUT_VALUE <= (others=>'0');
+
+    -- Check RRC.
+  ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_RRC THEN
+      MEM_SIGNALS <= "00";
+      WB_SIGNALS <= "01";
+      RSRC <= (others=>'0');
+      RDST <= IR(9 downto 7);
+      BRANCH_DETECTED <= '0';  
+      SIG_POP_DETECTED <= '0';
+      SIG_PUSH_DETECTED <= '0';
+      OPCODE <= CONST_OPCODE_RRC;   
+      OUTPUT_VALUE <= (others=>'0');
+
+  -- Check SETC.
+  ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_SETC THEN
+      MEM_SIGNALS <= "00";
+      WB_SIGNALS <= "00";
+      RSRC <= (others=>'0');
+      RDST <= (others=>'0');
+      BRANCH_DETECTED <= '0';  
+      SIG_POP_DETECTED <= '0';
+      SIG_PUSH_DETECTED <= '0';
+      OPCODE <= CONST_OPCODE_SETC;   
+      OUTPUT_VALUE <= (others=>'0');
+
+  -- Check CLRC.
+  ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_CLRC THEN
+      MEM_SIGNALS <= "00";
+      WB_SIGNALS <= "00";
+      RSRC <= (others=>'0');
+      RDST <= (others=>'0');
+      BRANCH_DETECTED <= '0';  
+      SIG_POP_DETECTED <= '0';
+      SIG_PUSH_DETECTED <= '0';
+      OPCODE <= CONST_OPCODE_CLRC;   
+      OUTPUT_VALUE <= (others=>'0');
+
+  -- Check out.
+  ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_OUT THEN
+      MEM_SIGNALS <= "00";
+      WB_SIGNALS <= "01";
+      RSRC <= (others=>'0');
+      RDST <= IR(9 downto 7);
+      BRANCH_DETECTED <= '0';  
+      SIG_POP_DETECTED <= '0';
+      SIG_PUSH_DETECTED <= '0';
+      OPCODE <= CONST_OPCODE_IN;   
+      OUTPUT_VALUE <= (others=>'0');
+
+    -- Check IN.
+  ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_IN THEN
+      MEM_SIGNALS <= "00";
+      WB_SIGNALS <= "00";
+      RSRC <= (others=>'0');
+      RDST <= IR(9 downto 7);
+      BRANCH_DETECTED <= '0';  
+      SIG_POP_DETECTED <= '0';
+      SIG_PUSH_DETECTED <= '0';
+      OPCODE <= CONST_OPCODE_IN;   
+      OUTPUT_VALUE <= (others=>'0');
+
+  -- Check INC.
+  ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_INC THEN
+      MEM_SIGNALS <= "00";
+      WB_SIGNALS <= "01";
+      RSRC <= (others=>'0');
+      RDST <= IR(9 downto 7);
+      BRANCH_DETECTED <= '0';  
+      SIG_POP_DETECTED <= '0';
+      SIG_PUSH_DETECTED <= '0';
+      OPCODE <= CONST_OPCODE_INC;   
+      OUTPUT_VALUE <= (others=>'0');
+
+  -- Check Dec.
+  ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_DEC THEN
+      MEM_SIGNALS <= "00";
+      WB_SIGNALS <= "01";
+      RSRC <= (others=>'0');
+      RDST <= IR(9 downto 7);
+      BRANCH_DETECTED <= '0';  
+      SIG_POP_DETECTED <= '0';
+      SIG_PUSH_DETECTED <= '0';
+      OPCODE <= CONST_OPCODE_DEC;   
+      OUTPUT_VALUE <= (others=>'0');
+
+    -- Check RET.
+  ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_RET THEN
+      MEM_SIGNALS <= "10";
+      WB_SIGNALS <= "00";
+      RSRC <= (others=>'0');
+      RDST <= (others=>'0');
+      BRANCH_DETECTED <= '0';  
+      SIG_POP_DETECTED <= '1';
+      SIG_PUSH_DETECTED <= '0';
+      OPCODE <= CONST_OPCODE_RET;   
+      OUTPUT_VALUE <= (others=>'0');
+
+      -- Check RTI.
+  ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_RTI THEN
+      MEM_SIGNALS <= "10";
+      WB_SIGNALS <= "00";
+      RSRC <= (others=>'0');
+      RDST <= (others=>'0');
+      BRANCH_DETECTED <= '0';  
+      SIG_POP_DETECTED <= '1';
+      SIG_PUSH_DETECTED <= '0';
+      OPCODE <= CONST_OPCODE_RTI;   
+      OUTPUT_VALUE <= (others=>'0');
+  ELSE 
+      MEM_SIGNALS <= "00";
+      WB_SIGNALS <= "00";
+      RSRC <= (others=>'0');
+      RDST <= (others=>'0');
+      BRANCH_DETECTED <= '0';  
+      SIG_POP_DETECTED <= '0';
+      SIG_PUSH_DETECTED <= '0';
+      OPCODE <= CONST_OPCODE_RTI;   
+      OUTPUT_VALUE <= (others=>'0');    
   	END IF; 
   END PROCESS;
 END ARCH;
