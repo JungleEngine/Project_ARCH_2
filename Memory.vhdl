@@ -8,7 +8,6 @@ ENTITY MEMORY IS
 		MEM_READ:										IN std_logic;
 		MEM_WRITE:										IN std_logic;
 		IBUBBLE_IN:										IN std_logic;
-		INT:											IN std_logic;
 		WB_SIGNALS_IN:				 IN std_logic_vector(2 DOWNTO 0);
 		OPCODE_IN:					 IN std_logic_vector(2 DOWNTO 0);
 		PREV_OPCODE:				 IN std_logic_vector(2 DOWNTO 0);
