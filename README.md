@@ -1,2 +1,3 @@
 # Introduction
-- This is an implementation of a simplified pipepeline microprocesser. 
+- This is an implementation of a simplified 5 stage pipepeline microprocesser. 
+- Fetch - Decode - Execute - Memory - Write back

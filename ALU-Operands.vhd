@@ -7,7 +7,7 @@ USE IEEE.numeric_std.all;
 --***	the right operands for the ALU
 --***
 
-ENTITY alu_operands IS
+ENTITY alu_operands_selection IS
  PORT (	
  		-------------------------< Possible ALU operands--------------------------------
 		---------Previous ALU results saved in the buffer before Memory Stage---
@@ -17,7 +17,7 @@ ENTITY alu_operands IS
 		---------Immediate value forwarded from Fetch stage when immediate opcode
 		immediate,
 		---------Value forwarded from memory stage if the operand is in memory--
-		memory_forwarded	
+		memory_forwarded_src,memory_forwarded_dst	
 
 		: IN std_logic_vector(15 DOWNTO 0);
 		------------------------- Possible ALU operands />-------------------------------
@@ -26,10 +26,10 @@ ENTITY alu_operands IS
 		dst_in_result_src,dst_in_result_dst,	--this can be reduced into two selectors only
 		src_in_result_src,src_in_result_dst,	
 		
-		src_in_mem,		--pop or load the src.	TODO:find if this is for previous command only or more than one level
-		dst_in_mem,		--pop or load the dst
+		src_in_mem_src,dst_in_mem_dst		--pop or load the src.	TODO:find if this is for previous command only or more than one level
+		dst_in_mem_src,dst_in_mem_dst		--pop or load the dst
 
-		dst_is_immediate	--destination is an immediate value which is passed from fetch
+		dst_in_immediate	--destination is an immediate value which is passed from fetch
 						--TODO: differentiate between forwarded immediate value and the 5 bit shift immediate value
 						--TODO: on ALU accept shift as input and select it with the opcode
 		: IN std_logic;
@@ -40,30 +40,34 @@ ENTITY alu_operands IS
 		: OUT std_logic_vector(15 downto 0)
 		------------------------- Operands out/>-----------------------------------------
 						 );
-END ENTITY alu_operands;
+END ENTITY alu_operands_selection;
 
-ARCHITECTURE alu_operands_arch OF alu_operands IS  
+ARCHITECTURE alu_operands_selection_arch OF alu_operands_selection IS  
 
 BEGIN
 	source <= 
-		memory_forwarded	when (src_in_mem='1')
+		memory_forwarded_src	when (src_in_mem_src='1')
+	else		
+		memory_forwarded_dst	when (src_in_mem_dst='1')
 	else
-		result_src 			when (src_in_result_src='1')
+		result_src 				when (src_in_result_src='1')
 	else
-		result_dst 			when (src_in_result_dst='1')
+		result_dst 				when (src_in_result_dst='1')
 	else
 		register_src;
 
 	destination <=
-		memory_forwarded	when (dst_in_mem='1')
+		memory_forwarded_src	when (dst_in_mem_src='1')
+	else		
+		memory_forwarded_dst	when (dst_in_mem_dst='1')
 	else
-		immediate 			when (dst_is_immediate='1')
+		immediate 				when (dst_in_immediate='1')
 	else
-		result_src 			when(dst_in_result_src='1')
+		result_src 				when (dst_in_result_src='1')
 	else
-		result_dst 			when(dst_in_result_dst='1')
+		result_dst 				when (dst_in_result_dst='1')
 	else
 		register_dst;
 		
-END alu_operands_arch;
+END alu_operands_selection_arch;
 
