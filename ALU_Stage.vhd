@@ -171,7 +171,7 @@ BEGIN
 	result_src_addr<=src_addr_alu_buffer;
 	result_dst_addr<=dst_addr_alu_buffer;
 
-	dec_SP <= '1' when (inc_SP = '0' AND (not stall) AND opcode_decode_stage = CONST_PUSH)
+	dec_SP <= '1' when (inc_SP = '0' AND stall='0' AND opcode_decode_stage = CONST_PUSH)
 	else '0';
 
 END alu_arch;
