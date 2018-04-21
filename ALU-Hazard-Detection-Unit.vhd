@@ -8,6 +8,14 @@ USE IEEE.numeric_std.all;
 --***	location of alu operands
 --***
 
+
+-- Operands:
+-- register_dst, register_src, opcode_buffer_before_alu, result_src, result_dst,
+-- src_write_back_buffer_after_alu, dst_write_back_buffer_after_alu, src_in_result_src, src_in_result_dst,
+-- dst_in_result_src, dst_in_result_dst, memory_src, memory_dst, src_write_back_buffer_after_memory,
+-- dst_write_back_buffer_after_memory, src_in_memory_src, src_in_memory_dst, dst_in_memory_src, dst_in_memory_dst, 
+-- LDM_operation, dst_in_immediate
+
 ENTITY alu_hazard_detection IS
  PORT (	
 		---------Current address of r_src,r_dst from register file----------------
@@ -54,8 +62,8 @@ ENTITY alu_hazard_detection IS
 		--which requires immediate value forwarding
 		LDM_operation : IN std_logic;
 		--this is valid for either load,store or shifting with immediate value
+		-- TODO: check previous comment
 		dst_in_immediate	: OUT std_logic
-
 		-------------------------Immediate Value-------------------------------
 
 
@@ -65,7 +73,7 @@ END ENTITY alu_hazard_detection;
 ARCHITECTURE alu_hazard_detection_arch OF alu_hazard_detection IS
 BEGIN
 
-	---------------------------ALU to ALU---------------------------------------
+	--------------------------- ALU to ALU ---------------------------------------
 	src_in_result_dst <= '1'
 		when( register_src=result_dst AND dst_write_back_buffer_after_alu = '1' )
 	else '0';
@@ -81,11 +89,11 @@ BEGIN
 	dst_in_result_src <= '1'
 		when( register_dst=result_src AND src_write_back_buffer_after_alu = '1' )
 	else '0';
-	---------------------------ALU to ALU---------------------------------------
+	--------------------------- ALU to ALU ---------------------------------------
 
 
 
-	---------------------------Memory to ALU------------------------------------
+	--------------------------- Memory to ALU ------------------------------------
 	src_in_memory_dst <= '1'
 		when( register_src=memory_dst AND dst_write_back_buffer_after_memory = '1' )
 	else '0';
@@ -101,12 +109,12 @@ BEGIN
 	dst_in_memory_src <= '1'
 		when( register_dst=memory_src AND src_write_back_buffer_after_memory = '1' )
 	else '0';
-	---------------------------Memory to ALU------------------------------------
+	--------------------------- Memory to ALU ------------------------------------
 
 
-	-----------------------Fetch to ALU (immediate)-----------------------------
+	----------------------- Fetch to ALU (immediate) -----------------------------
 	dst_in_immediate<=LDM_operation;
-	-----------------------Fetch to ALU (immediate)-----------------------------
+	----------------------- Fetch to ALU (immediate) -----------------------------
 
 
 END alu_hazard_detection_arch;
