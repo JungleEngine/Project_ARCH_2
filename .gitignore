@@ -48,11 +48,12 @@ Temporary Items
 *.mpf
 *.wlf
 *.vstf
-work/
+work/*
 *.swp
 transcript
 
 
+.fuse*
 
 #intellij files
 .idea/
