@@ -97,7 +97,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   	-- Check SHR/SHL, read-write(2 bits), WB 2 bits src,dst..
   	ELSIF IR(15) = '0' and( IR(14 downto 10) = CONST_OPCODE_SHR or IR(14 downto 10) = CONST_OPCODE_SHL ) THEN
   		MEM_SIGNALS <= "00";
-  		WB_SIGNALS <= "01";
+  		WB_SIGNALS  "01";
   		RSRC <=IR(9 downto 7);
   		RDST <= IR(6 downto 4);
   		BRANCH_DETECTED <= '0';  
@@ -105,7 +105,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		SIG_PUSH_DETECTED <= '0';
   		OPCODE <= IR(14 downto 10);		
   		OUTPUT_VALUE <= ("00000" & IR(9 downto 6) );
-		
+	
 	-- Check Branch value in destination.
 	ELSIF IR(15) = '0' and (IR(14 downto 10) = CONST_OPCODE_JMP or IR(14 downto 10) = CONST_OPCODE_JZ  
 	or IR(14 downto 10) = CONST_OPCODE_JC or IR(14 downto 10) = CONST_OPCODE_JN) THEN

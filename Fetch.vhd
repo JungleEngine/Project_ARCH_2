@@ -7,7 +7,8 @@ ENTITY FETCH IS
  PORT (	CLK :                           in  std_logic;
 		INTERRUPT_PIN :	                in  std_logic;
 		PC_RST   :                      in  std_logic_vector;       
-		DECODING_STAGE_OUTPUT :         in  std_logic_vector      	(8 DOWNTO 0);
+    DECODING_STAGE_OUTPUT :         in  std_logic_vector        (8 DOWNTO 0);
+		DECODING_STALL_PC :             in  std_logic_vector      	(8 DOWNTO 0);
 		PC :                           	in  std_logic_vector      	(8  DOWNTO 0);
 		RST_ADDRESS   :               	in  std_logic_vector      	(8 DOWNTO 0);
 		INTERRUPT_ADDRESS :             in  std_logic_vector      	(8 DOWNTO 0);
@@ -71,6 +72,8 @@ ARCHITECTURE ARCH OF FETCH IS
       SIG_PC_MUX_OUTPUT <= MEMORY_STAGE_OUTPUT;
     ELSIF SELECTOR_PC = ("01000") THEN
       SIG_PC_MUX_OUTPUT <= PC;
+    ELSIF SELECTOR_PC = ("10000") THEN
+      SIG_PC_MUX_OUTPUT <= DECODING_STALL_PC;
     ELSE
       SIG_PC_MUX_OUTPUT <= SIG_PC_PLUS_2;
     END IF;
