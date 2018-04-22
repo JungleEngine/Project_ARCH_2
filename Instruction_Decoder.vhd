@@ -113,8 +113,8 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
 	
 	-- Check Branch value in destination.
 	ELSIF IR(15) = '0' and (IR(14 downto 10) = CONST_OPCODE_JMP or IR(14 downto 10) = CONST_OPCODE_JZ  
-	or IR(14 downto 10) = CONST_OPCODE_JC or IR(14 downto 10) = CONST_OPCODE_JN) 
-  or IR(14 downto 10) = CONST_OPCODE_CALL THEN
+	or IR(14 downto 10) = CONST_OPCODE_JC or IR(14 downto 10) = CONST_OPCODE_JN 
+  or IR(14 downto 10) = CONST_OPCODE_CALL) THEN
   		MEM_SIGNALS <= "00";
   		WB_SIGNALS <= "00";
   		RSRC <= (others=>'0');

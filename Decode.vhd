@@ -34,7 +34,7 @@ ENTITY DECODE IS
 	    OPCODE   				: out std_logic_vector(4 downto 0);
 	    DECODING_STAGE_OUTPUT   : out std_logic_vector(8 downto 0);
 	    SP_OUTPUT               : out std_logic_vector(8 downto 0);
-	    PC_OUT         				: out std_logic_vector(8 downto 0);
+	    PC_OUT         			: out std_logic_vector(8 downto 0);
 	    EA_OR_SH_VALUE          : out std_logic_vector(8 downto 0)
 
  		   
@@ -148,7 +148,12 @@ ALU_TO_DECODE_FORWARDING : ENTITY work.ALU_FORWARD  PORT MAP
   -- Pass I bubble.
   I_BUBBLE_OUT <=I_BUBBLE;
 
-  PROCESS(SIG_DH_STALL, SIG_SP_INC_DETECTED)
+  PROCESS(I_BUBBLE, ALU_MEMR, MEM_MEMR, ALU_RSRC, ALU_RDST, MEM_RSRC, MEM_RDST, FLAG_REG,
+  		ALU_WB_SIGNALS, SP, PC, IR, ALU_STAGE_OUTPUT_SRC, ALU_STAGE_OUTPUT_DST, REGISTER_FILE_OUTPUT,
+  		 SIG_SP_INC_DETECTED, SIG_PUSH_DETECTED, SIG_BRANCH_TAKEN, SIG_ALU_FORWARD_RSRC, SIG_ALU_FORWARD_RDST,
+  		 SIG_BRANCH_ADDRESS, SIG_BRANCH_DETECTED, SIG_DH_STALL, SIG_RSRC, SIG_RDST, SIG_OPCODE, SIG_OPCODE_FROM_EXECUTE,
+  		 SIG_BRANCH_DETECTOR_DATA
+  		 )
   BEGIN
   -- Update sp and out the new value, if no stall.
   IF SIG_SP_INC_DETECTED = '1' and SIG_DH_STALL = '0' THEN
