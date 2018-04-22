@@ -10,7 +10,7 @@ ENTITY INSTRUCTION_DECODER IS
 		
 		BRANCH_DETECTED  	: out std_logic;
 		SIG_POP_DETECTED 	: out std_logic;
-		SIG_PUSH_DETECTED 	: out std_logic;
+		SIG_PASS_SP 	: out std_logic;
 		MEM_SIGNALS 		: out std_logic_vector(1 downto 0);
 		WB_SIGNALS 			: out std_logic_vector(1 downto 0);
 		RSRC 				: out std_logic_vector (2 downto 0);
@@ -71,9 +71,10 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		RDST <= (others=>'0');
   		BRANCH_DETECTED <= ('0');
   		SIG_POP_DETECTED <= '0';
-  		SIG_PUSH_DETECTED <= '0';
+  		SIG_PASS_SP <= '1';
   		OPCODE <= (others=>'0');
   		OUTPUT_VALUE <= (others=>'0');
+
   	
   	-- Check load, read-write(2 bits), WB 2 bits src,dst.
   	ELSIF IR(15) = '1' and IR(14) = '1' THEN
@@ -83,7 +84,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		RDST <= IR(13 downto 11);
   		BRANCH_DETECTED <= '0';  
   		SIG_POP_DETECTED <= '0';
-  		SIG_PUSH_DETECTED <= '0';
+  		SIG_PASS_SP <= '0';
   		OPCODE <= CONST_OPCODE_LDD;		
   		OUTPUT_VALUE <= IR(10 downto 2);
 
@@ -95,7 +96,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		RDST <= IR(13 downto 11);
   		BRANCH_DETECTED <= '0';  
   		SIG_POP_DETECTED <= '0';
-  		SIG_PUSH_DETECTED <= '0';
+  		SIG_PASS_SP <= '0';
   		OPCODE <= CONST_OPCODE_STD;		
   		OUTPUT_VALUE <= IR(10 downto 2);
 
@@ -107,7 +108,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		RDST <= IR(6 downto 4);
   		BRANCH_DETECTED <= '0';  
   		SIG_POP_DETECTED <= '0';
-  		SIG_PUSH_DETECTED <= '0';
+  		SIG_PASS_SP <= '0';
   		OPCODE <= IR(14 downto 10);		
   		OUTPUT_VALUE <= ("00000" & IR(9 downto 6) );
 	
@@ -121,7 +122,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		RDST <= IR(9 downto 7);
   		BRANCH_DETECTED <= '1';  
   		SIG_POP_DETECTED <= '0';
-  		SIG_PUSH_DETECTED <= '0';
+  		SIG_PASS_SP <= '1';
   		OPCODE <= IR(14 downto 10);		
   		OUTPUT_VALUE <= (others=>'0');
 
@@ -133,7 +134,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		RDST <= IR(6 downto 4);
   		BRANCH_DETECTED <= '0';  
   		SIG_POP_DETECTED <= '0';
-  		SIG_PUSH_DETECTED <= '0';
+  		SIG_PASS_SP <= '0';
   		OPCODE <= CONST_OPCODE_MUL;		
   		OUTPUT_VALUE <= (others=>'0');
 
@@ -157,7 +158,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		RDST <= IR(9 downto 7);
   		BRANCH_DETECTED <= '0';  
   		SIG_POP_DETECTED <= '1';
-  		SIG_PUSH_DETECTED <= '0';
+  		SIG_PASS_SP <= '1';
   		OPCODE <= CONST_OPCODE_POP;		
   		OUTPUT_VALUE <= (others=>'0');
   	
@@ -169,7 +170,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		RDST <= IR(6 downto 4);
   		BRANCH_DETECTED <= '0';  
   		SIG_POP_DETECTED <= '0';
-  		SIG_PUSH_DETECTED <= '0';
+  		SIG_PASS_SP <= '0';
   		OPCODE <= CONST_OPCODE_MOV;		
   		OUTPUT_VALUE <= (others=>'0');
   		
@@ -181,7 +182,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		RDST <= IR(6 downto 4);
   		BRANCH_DETECTED <= '0';  
   		SIG_POP_DETECTED <= '0';
-  		SIG_PUSH_DETECTED <= '0';
+  		SIG_PASS_SP <= '0';
   		OPCODE <= CONST_OPCODE_ADD;		
   		OUTPUT_VALUE <= (others=>'0');
 
@@ -193,7 +194,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		RDST <= IR(6 downto 4);
   		BRANCH_DETECTED <= '0';  
   		SIG_POP_DETECTED <= '0';
-  		SIG_PUSH_DETECTED <= '0';
+  		SIG_PASS_SP <= '0';
   		OPCODE <= CONST_OPCODE_SUB;		
   		OUTPUT_VALUE <= (others=>'0');
 
@@ -205,7 +206,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
       RDST <= IR(6 downto 4);
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '0';
-      SIG_PUSH_DETECTED <= '0';
+      SIG_PASS_SP <= '0';
       OPCODE <= CONST_OPCODE_AND;   
       OUTPUT_VALUE <= (others=>'0');
 
@@ -217,7 +218,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
       RDST <= IR(6 downto 4);
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '0';
-      SIG_PUSH_DETECTED <= '0';
+      SIG_PASS_SP <= '0';
       OPCODE <= CONST_OPCODE_OR;   
       OUTPUT_VALUE <= (others=>'0');
 
@@ -229,7 +230,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
       RDST <= IR(9 downto 7);
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '0';
-      SIG_PUSH_DETECTED <= '0';
+      SIG_PASS_SP <= '0';
       OPCODE <= CONST_OPCODE_RLC;   
       OUTPUT_VALUE <= (others=>'0');
 
@@ -241,7 +242,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
       RDST <= IR(9 downto 7);
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '0';
-      SIG_PUSH_DETECTED <= '0';
+      SIG_PASS_SP <= '0';
       OPCODE <= CONST_OPCODE_RRC;   
       OUTPUT_VALUE <= (others=>'0');
 
@@ -253,7 +254,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
       RDST <= (others=>'0');
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '0';
-      SIG_PUSH_DETECTED <= '0';
+      SIG_PASS_SP <= '0';
       OPCODE <= CONST_OPCODE_SETC;   
       OUTPUT_VALUE <= (others=>'0');
 
@@ -265,31 +266,31 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
       RDST <= (others=>'0');
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '0';
-      SIG_PUSH_DETECTED <= '0';
+      SIG_PASS_SP <= '0';
       OPCODE <= CONST_OPCODE_CLRC;   
       OUTPUT_VALUE <= (others=>'0');
 
-  -- Check out.
+  -- Check OUT.
   ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_OUT THEN
-      MEM_SIGNALS <= "00";
+      MEM_SIGNALS <= "01";
       WB_SIGNALS <= "01";
       RSRC <= (others=>'0');
       RDST <= IR(9 downto 7);
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '0';
-      SIG_PUSH_DETECTED <= '0';
+      SIG_PASS_SP <= '0';
       OPCODE <= CONST_OPCODE_IN;   
       OUTPUT_VALUE <= (others=>'0');
 
     -- Check IN.
   ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_IN THEN
-      MEM_SIGNALS <= "00";
+      MEM_SIGNALS <= "10";
       WB_SIGNALS <= "00";
       RSRC <= (others=>'0');
       RDST <= IR(9 downto 7);
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '0';
-      SIG_PUSH_DETECTED <= '0';
+      SIG_PASS_SP <= '0';
       OPCODE <= CONST_OPCODE_IN;   
       OUTPUT_VALUE <= (others=>'0');
 
@@ -301,7 +302,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
       RDST <= IR(9 downto 7);
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '0';
-      SIG_PUSH_DETECTED <= '0';
+      SIG_PASS_SP <= '0';
       OPCODE <= CONST_OPCODE_INC;   
       OUTPUT_VALUE <= (others=>'0');
 
@@ -313,7 +314,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
       RDST <= IR(9 downto 7);
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '0';
-      SIG_PUSH_DETECTED <= '0';
+      SIG_PASS_SP <= '0';
       OPCODE <= CONST_OPCODE_DEC;   
       OUTPUT_VALUE <= (others=>'0');
 
@@ -325,7 +326,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
       RDST <= (others=>'0');
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '1';
-      SIG_PUSH_DETECTED <= '0';
+      SIG_PUSH_DETECTED <= '1';
       OPCODE <= CONST_OPCODE_RET;   
       OUTPUT_VALUE <= (others=>'0');
 
@@ -337,7 +338,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
       RDST <= (others=>'0');
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '1';
-      SIG_PUSH_DETECTED <= '0';
+      SIG_PUSH_DETECTED <= '1';
       OPCODE <= CONST_OPCODE_RTI;   
       OUTPUT_VALUE <= (others=>'0');
   ELSE 

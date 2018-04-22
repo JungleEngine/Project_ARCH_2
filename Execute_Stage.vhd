@@ -9,7 +9,7 @@ USE IEEE.numeric_std.all;
 --***
 --***
 
-ENTITY alu IS
+ENTITY EXECUTE IS
  PORT (	
 
  		--from Fetch Stage
@@ -17,11 +17,10 @@ ENTITY alu IS
 
 
  		--from Decode Stage
- 		LDM_operation			: IN std_logic;--This signal is received from the decoding stage if this is an operation
-		stall					: IN std_logic;--Stall signal sent by Decode stage
+		ibubble_alu_buffer		: IN std_logic;--Stall signal sent by Decode stage
 		opcode_decode_stage		: IN std_logic_vector(4 DOWNTO 0);--Opcode bits sent by Decode stage
-		inc_SP					: IN std_logic;--Signal sent by Decode stage to increment SP
-
+		wb_signals,mem_signals : IN std_logic_vector(1 downto 0);
+		pc : IN std_logic_vector(8 DOWNTO 0);
 
 
  		--from buffer before ALU
@@ -83,11 +82,18 @@ ENTITY alu IS
 		result_dst_addr
 		: OUT std_logic_vector(2 DOWNTO 0)
 
-	);
-END ENTITY alu;
+		IBUBBLE_OUT: OUT std_logic;
+		MEM_SIGNALS_OUT: OUT std_logic_vector(1 DOWNTO 0);
+		WB_SIGNALS_OUT: OUT std_logic_vector(1 DOWNTO 0);
+		OPCODE_OUT: OUT std_logic_vector(4 DOWNTO 0);
+		PC_OUT: OUT std_logic_vector(8 DOWNTO 0)
 
-ARCHITECTURE alu_arch OF alu IS
+	);
+END ENTITY EXECUTE;
+
+ARCHITECTURE EXECUTE_ARCH OF EXECUTE IS
 	CONSTANT CONST_PUSH: std_logic_vector(4 downto 0) := "01101";
+	CONSTANT CONST_CALL: std_logic_vector(4 downto 0) := "11011";
 
 	SIGNAL
 	src_in_mem_buffer_src,
@@ -128,7 +134,6 @@ BEGIN
 		src_in_wb_buffer_dst,
 		dst_in_wb_buffer_src,
 		dst_in_wb_buffer_dst,
-		LDM_operation,
 		dst_in_immediate
 		);
 	
@@ -171,8 +176,15 @@ BEGIN
 	result_src_addr<=src_addr_alu_buffer;
 	result_dst_addr<=dst_addr_alu_buffer;
 
-	dec_SP <= '1' when (inc_SP = '0' AND stall='0' AND opcode_decode_stage = CONST_PUSH)
+	OPCODE_OUT <= opcode_alu_buffer;
+	IBUBBLE_OUT <= ibubble_alu_buffer;
+	MEM_SIGNALS_OUT <= mem_signals;
+	WB_SIGNALS_OUT<= wb_signals;
+	PC_OUT <= pc;
+
+	--TODO: this is not right, check all conditions and check what decode is sending
+	dec_SP <= '1' when (ibubble_alu_buffer='1' OR opcode_alu_buffer = CONST_PUSH OR opcode_alu_buffer = CONST_CALL)
 	else '0';
 
-END alu_arch;
+END EXECUTE_ARCH;
 

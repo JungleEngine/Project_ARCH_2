@@ -58,9 +58,6 @@ ENTITY alu_hazard_detection IS
 
 
 		-------------------------Immediate Value-------------------------------
-		--This signal is received from the decoding stage if this is an operation
-		--which requires immediate value forwarding
-		LDM_operation : IN std_logic;
 		--this is valid for either load,store or shifting with immediate value
 		-- TODO: check previous comment
 		dst_in_immediate	: OUT std_logic
@@ -71,6 +68,8 @@ ENTITY alu_hazard_detection IS
 END ENTITY alu_hazard_detection;
 
 ARCHITECTURE alu_hazard_detection_arch OF alu_hazard_detection IS
+CONSTANT CONST_LDM 	: std_logic_vector(4 downto 0):="11101";
+
 BEGIN
 
 	--------------------------- ALU to ALU ---------------------------------------
@@ -113,7 +112,8 @@ BEGIN
 
 
 	----------------------- Fetch to ALU (immediate) -----------------------------
-	dst_in_immediate<=LDM_operation;
+	dst_in_immediate<='1' when (opcode_buffer_before_alu=CONST_LDM)
+	else '0';
 	----------------------- Fetch to ALU (immediate) -----------------------------
 
 
