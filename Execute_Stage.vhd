@@ -69,8 +69,9 @@ ENTITY EXECUTE IS
 		dec_SP: OUT std_logic;	-- Signal sent by ALU stage to decrement SP
 		-------------------------- SP register signals />-----------------------------------------
 
-
-
+		FR_IN_VAL: IN std_logic_vector(3 DOWNTO 0);
+		FR_OUT_VAL: OUT std_logic_vector(3 DOWNTO 0);
+		FR_WRITE_EN: OUT std_logic;
 		------------------------------------------------------------------------
 		--Output to be passed to the next stage buffer
 		------------------------------------------------------------------------
@@ -154,7 +155,8 @@ BEGIN
 		dst_in_wb_buffer_src,
 		dst_in_wb_buffer_dst,
 		dst_in_immediate,
-		ALU_destination_input,ALU_source_input
+		ALU_destination_input,
+		ALU_source_input
 		);
 
 	ALU_Output_Selection_Unit: ENTITY work.alu_output_selection PORT MAP(
@@ -167,6 +169,16 @@ BEGIN
 		result_dst_val
 		);
 
+	ALU: ENTITY work.alu PORT MAP (
+		A 				=> ALU_destination_input,
+		B 				=> ALU_source_input,
+  		FLAG_REG 		=> FR_IN_VAL,
+       	SEL 			=> opcode_alu_buffer,
+       	FLAG_REG_INPUT  => FR_OUT_VAL,
+       	FLAG_REG_WRITE  => FR_WRITE_EN,
+       	F_SRC 			=> ALU_source_output,
+       	F_DST 			=> ALU_destination_output
+		);
 
 
 

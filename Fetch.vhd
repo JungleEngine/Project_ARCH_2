@@ -5,26 +5,25 @@ USE IEEE.STD_LOGIC_SIGNED.all;
 
 ENTITY FETCH IS
  PORT (
-		INTERRUPT_PIN :	                in  std_logic;
-		PC_RST   :                      in  std_logic_vector;       
-    DECODING_STAGE_OUTPUT :         in  std_logic_vector        (8 DOWNTO 0);
-		PC :                           	in  std_logic_vector      	(8  DOWNTO 0);
-		RST_ADDRESS   :               	in  std_logic_vector      	(8 DOWNTO 0);
-		INTERRUPT_ADDRESS :             in  std_logic_vector      	(8 DOWNTO 0);
-		MEMORY_STAGE_OUTPUT :           in  std_logic_vector      	(8 DOWNTO 0);
-		MEMORY_OUTPUT :					in  std_logic_vector      	(15 DOWNTO 0);
+		INTERRUPT_PIN:	                in  std_logic;
+		PC_RST:                      	in  std_logic_vector;       
+    	DECODING_STAGE_OUTPUT:         	in  std_logic_vector        (8 DOWNTO 0);
+		PC:                           	in  std_logic_vector      	(8  DOWNTO 0);
+		RST_ADDRESS:               		in  std_logic_vector      	(8 DOWNTO 0);
+		INTERRUPT_ADDRESS:              in  std_logic_vector      	(8 DOWNTO 0);
+		MEMORY_STAGE_OUTPUT:            in  std_logic_vector      	(8 DOWNTO 0);
+		MEMORY_OUTPUT:					in  std_logic_vector      	(15 DOWNTO 0);
 		MEMORY_SELECTOR_MEMORY_STAGE:   in  std_logic;
 		DECODE_SELECTOR_DECODE_STAGE:   in  std_logic;
 		DECODE_SELECTOR_DECODE_STAGE:   in  std_logic;
-		
-		SELECTOR_IR_OUT :				in  std_logic;
-		IR_OUTPUT_TO_DECODE :			out std_logic_vector     	(15 downto 0);
-		PC_OUTPUT_TO_DECODE :			out std_logic_vector     	(8 downto 0);
-		I_BUBBLE :						out std_logic;
-		PC_WRITE :						out std_logic;
-		PC_REGISTER_INPUT :				out std_logic_vector     	(8 downto 0);
-		MEMORY_READ_ADDRESS :			out std_logic_vector     	(8 downto 0);
-		MEMORY_READ :					out std_logic
+		SELECTOR_IR_OUT:				in  std_logic;
+		IR_OUTPUT_TO_DECODE:			out std_logic_vector     	(15 downto 0);
+		PC_OUTPUT_TO_DECODE:			out std_logic_vector     	(8 downto 0);
+		I_BUBBLE:						out std_logic;
+		PC_WRITE:						out std_logic;
+		PC_REGISTER_INPUT:				out std_logic_vector     	(8 downto 0);
+		MEMORY_READ_ADDRESS:			out std_logic_vector     	(8 downto 0);
+		MEMORY_READ:					out std_logic
        );
 END ENTITY FETCH;
 

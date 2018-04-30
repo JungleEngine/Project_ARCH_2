@@ -7,12 +7,13 @@ USE IEEE.numeric_std.all;
 --***
 
 ENTITY processor IS
- PORT (	
+	PORT(
  		CLK : IN std_logic;
  		RST : IN std_logic;
  		INTERRUPT_PIN : IN std_logic
-	);
+		);
 END ENTITY processor;
+
 
 ARCHITECTURE processor_arch OF processor IS
 
@@ -65,12 +66,55 @@ SIGNAL SIG_DECODE_STAGE_OUTPUT: std_logic_vector(8 DOWNTO 0);
 SIGNAL DECODE_FETCH_PC_SELECTION_BIT: std_logic;
 SIGNAL WRITEBACK_FETCH_PC_SELECTION_BIT: std_logic;
 
+SIGNAL SP_INC: std_logic;
+SIGNAL SP_DEC: std_logic;
+
+SIGNAL PC_WRITE_ENABLE: std_logic;
+SIGNAL WRITEBACK_FLAG_REGISTER_WRITE_ENABLE: std_logic;
+SIGNAL ALU_FLAG_REGISTER_WRITE_ENABLE: std_logic;
+SIGNAL DECODE_FLAG_REGISTER_WRITE_ENABLE: std_logic;
+
+SIGNAL WRITEBACK_FLAG_REGISTER_DATA: std_logic_vector(3 DOWNTO 0);
+SIGNAL ALU_FLAG_REGISTER_DATA: std_logic_vector(3 DOWNTO 0);
+SIGNAL DECODE_FLAG_REGISTER_DATA: std_logic_vector(3 DOWNTO 0);
+
+SIGNAL WRITEBACK_REGISTERS_BUS: std_logic_vector(31 DOWNTO 0);
+SIGNAL REGISTERS_ALU_BUS: std_logic_vector(31 DOWNTO 0);
+SIGNAL REGISTERS_DECODE_BUS: std_logic_vector(15 DOWNTO 0);
+
+SIGNAL PC_VALUE: std_logic_vector(8 DOWNTO 0);
+SIGNAL SP_VALUE: std_logic_vector(8 DOWNTO 0);
+SIGNAL FR_VALUE: std_logic_vector(8 DOWNTO 0);
+
 BEGIN
-	
+
 	REGISTER_FILE: ENTITY work.REGISTER_FILE PORT MAP (
+		CLK					=> CLK,
+		RST					=> RST,
+		SP_INC				=> SP_INC,
+		SP_DEC				=> SP_DEC,
+		PC_ENABLE 			=> PC_WRITE_ENABLE,
+		WB_FR_ENABLE 		=> WRITEBACK_FLAG_REGISTER_WRITE_ENABLE,
+		ALU_FR_ENABLE 		=> ALU_FLAG_REGISTER_WRITE_ENABLE,
+		DECODE_FR_ENABLE 	=> DECODE_FLAG_REGISTER_WRITE_ENABLE,
+		WB_Rdst_INDEX 		=> MEMORY_WRITEBACK_OUT_Rdst_INDEX,
+		WB_Rsrc_INDEX 		=> MEMORY_WRITEBACK_OUT_Rsrc_INDEX,
+		ALU_Rdst_INDEX 		=> DECODE_EXECUTE_OUT_Rdst_INDEX,
+		ALU_Rsrc_INDEX		=> DECODE_EXECUTE_OUT_Rsrc_INDEX,
+		DECODE_Rdst_INDEX 	=> DECODE_EXECUTE_IN_Rdst_INDEX,
+		PC_IN_DATA			=> WRITEBACK_REGISTERS_BUS(8 DOWNTO 0),
+		WB_FR_DATA			=> WRITEBACK_FLAG_REGISTER_DATA,
+		ALU_FR_DATA			=> ALU_FLAG_REGISTER_DATA,
+		DECODE_FR_DATA		=> DECODE_FLAG_REGISTER_DATA,
+		IN_BUS				=> WRITEBACK_REGISTERS_BUS,
+		ALU_OUT_BUS			=> REGISTERS_ALU_BUS,
+		DECODE_OUT_BUS		=> REGISTERS_DECODE_BUS,
+		PC_OUT_DATA			=> PC_VALUE,
+		SP_OUT_DATA			=> SP_VALUE,
+		FR_OUT_DATA			=> FR_VALUE
 		);
 
-	INST_RAM: ENTITY work.RAM PORT MAP (
+	INST_MEMORY: ENTITY work.RAM PORT MAP (
 		CLK,
 		GND(0),
 		INST_MEM_ADDRESS,
@@ -78,14 +122,13 @@ BEGIN
 		INST_MEM_IR
 		);
 
-	DATA_RAM: ENTITY work.RAM PORT MAP (
+	DATA_MEMORY: ENTITY work.RAM PORT MAP (
 		CLK,
 		EXECUTE_MEMORY_OUT_MEM_SIGNALS(1),
 		DATA_MEM_ADDRESS,
 		DATA_MEM_DATA_IN,
 		DATA_MEM_DATA_OUT
 		);
-
 
 	FETCH_STAGE: ENTITY work.FETCH PORT MAP (
 		INTERRUPT_PIN					=> INTERRUPT_PIN,
@@ -98,25 +141,21 @@ BEGIN
 		IR_OUTPUT_TO_DECODE 			=> FETCH_DECODE_IN_IR_VAL,
 		PC_OUTPUT_TO_DECODE				=> FETCH_DECODE_IN_PC_VAL,
 		I_BUBBLE 						=> FETCH_DECODE_IN_IBUBBLE,
-
-		------------------------------------------------------------------------
-		--Register File
-			PC :                           	in  std_logic_vector      	(8  DOWNTO 0);
-			PC_REGISTER_INPUT
-		------------------------------------------------------------------------
+		PC_write 						=> PC_WRITE_ENABLE,
+		PC_REGISTER_INPUT				=> PC_VALUE
 	);
 
 	FETCH_DECODE_BUFFER: ENTITY work.REG GENERIC MAP(n => 26) PORT MAP (
 		CLK		=>	CLK,
 
-		D 		=>(
+		D 		=>	(
 					FETCH_DECODE_IN_IR_VAL&
 					FETCH_DECODE_IN_PC_VAL&
 					FETCH_DECODE_IN_IBUBBLE
 					),
 		RST 	=>	RST,
 		EN 		=>	VCC(0),
-		Q 		=>(
+		Q 		=>	(
 					FETCH_DECODE_OUT_IR_VAL&
 					FETCH_DECODE_OUT_PC_VAL&
 					FETCH_DECODE_OUT_IBUBBLE
@@ -137,18 +176,13 @@ BEGIN
 		ALU_STAGE_OUTPUT_SRC	=> EXECUTE_MEMORY_IN_ADDRESS_SP_SRCRESULT,
 		ALU_STAGE_OUTPUT_DST	=> EXECUTE_MEMORY_IN_ALU_DATA,
 		OPCODE_FROM_EXECUTE		=> DECODE_EXECUTE_OUT_OPCODE,
-
-		------------------------------------------------------------------------
-		--Register File
-			REGISTER_FILE_OUTPUT 	: in std_logic_vector(15 downto 0);
-			FLAG_REG 				: in std_logic_vector(3 downto 0);
-			SP 						: in std_logic_vector(8 downto 0);
-			FLAGS_REG_WRITE 		: out std_logic;
-			SP_INC					: out std_logic;
-			FLAG_REG_OUT			: out std_logic_vector(3 downto 0);
-		------------------------------------------------------------------------
-
-		PC_SELECTOR_BIT			=>DECODE_FETCH_PC_SELECTION_BIT,
+		REGISTER_FILE_OUTPUT 	=> REGISTERS_DECODE_BUS,
+		FLAG_REG 				=> FR_VALUE,
+		SP 						=> SP_VALUE,
+		FLAGS_REG_WRITE 		=> DECODE_FLAG_REGISTER_WRITE_ENABLE,
+		SP_INC					=> SP_INC,
+		FLAG_REG_OUT			=> DECODE_FLAG_REGISTER_DATA,
+		PC_SELECTOR_BIT			=> DECODE_FETCH_PC_SELECTION_BIT,
 		I_BUBBLE_OUT			=> DECODE_EXECUTE_IN_IBUBBLE,
 		WB_SIGNALS              => DECODE_EXECUTE_IN_WB_SIGNALS,
 		MEM_SIGNALS             => DECODE_EXECUTE_IN_MEM_SIGNALS,
@@ -162,7 +196,7 @@ BEGIN
 
 	DECODE_EXECUTE_BUFFER: ENTITY work.REG GENERIC MAP(n => 35) PORT MAP (
 		CLK		=>	CLK,
-		D 		=> (
+		D 		=>	(
 					DECODE_EXECUTE_IN_IBUBBLE&
 					DECODE_EXECUTE_IN_WB_SIGNALS&
 					DECODE_EXECUTE_IN_MEM_SIGNALS&
@@ -183,7 +217,7 @@ BEGIN
 					DECODE_EXECUTE_OUT_OPCODE&
 					DECODE_EXECUTE_OUT_PC_OUT&
 					DECODE_EXECUTE_OUT_EA_OR_SP_SH_VALUE
-					),
+					)
 		);
 
 	EXECUTE_STAGE: ENTITY work.EXECUTE PORT MAP (
@@ -205,15 +239,12 @@ BEGIN
 		dst_val_wb_buffer			=> MEMORY_WRITEBACK_OUT_RAM_VALUE_or_DST_RESULT,
 		wb_ctrl_sig_src_wb_buffer	=> MEMORY_WRITEBACK_OUT_WB_SIGNALS(0),
 		wb_ctrl_sig_dst_wb_buffer	=> MEMORY_WRITEBACK_OUT_WB_SIGNALS(0),
-
-		------------------------------------------------------------------------
-		-- Register File
-			------------------------------------------------------------------------
-			src_val_reg_file,
-			dst_val_reg_file: IN std_logic_vector(15 DOWNTO 0);
-			dec_SP: OUT std_logic;	-- Signal sent by ALU stage to decrement SP
-		------------------------------------------------------------------------
-
+		src_val_reg_file			=> REGISTERS_ALU_BUS(15 DOWNTO 0),
+		dst_val_reg_file			=> REGISTERS_ALU_BUS(31 DOWNTO 16),
+		dec_SP						=> SP_DEC,	-- Signal sent by ALU stage to decrement SP
+		FR_IN_VAL					=> FR_VALUE,
+		FR_OUT_VAL					=> ALU_FLAG_REGISTER_DATA,
+		FR_WRITE_EN 				=> ALU_FLAG_REGISTER_WRITE_ENABLE,
 		result_src_val 				=> EXECUTE_MEMORY_IN_ADDRESS_SP_SRCRESULT,
 		result_dst_val 				=> EXECUTE_MEMORY_IN_ALU_DATA,
 		result_src_addr				=> EXECUTE_MEMORY_IN_Rsrc_INDEX,
@@ -311,12 +342,10 @@ BEGIN
 		OPCODE 					=> MEMORY_WRITEBACK_OUT_OPCODE,
 		Rdst_INDEX 				=> MEMORY_WRITEBACK_OUT_Rdst_INDEX,
 		Rsrc_INDEX 				=> MEMORY_WRITEBACK_OUT_Rsrc_INDEX,
-
-		----------------- REGISTERS ENABLES ----------------------
-			PC_WRITE_EN 			=>WRITEBACK_FETCH_PC_SELECTION_BIT,
-			REGISTERS_WRITE_ENABLES =>
-			OUT_BUS: INOUT std_logic_vector(31 DOWNTO 0)
-		----------------------------------------------------------
+		PC_WRITE_EN 			=> WRITEBACK_FETCH_PC_SELECTION_BIT,
+		FR_WRITE_EN 			=> WRITEBACK_FLAG_REGISTER_WRITE_ENABLE,
+		FR_DATA 				=> WRITEBACK_FLAG_REGISTER_DATA,
+		OUT_BUS: 				=> WRITEBACK_REGISTERS_BUS
 		);
 
 END processor_arch;

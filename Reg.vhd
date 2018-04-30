@@ -1,21 +1,25 @@
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 ENTITY REG IS
-  generic(n : integer :=32);
-     PORT( 
-     d :IN std_logic_vector(n-1 downto 0); 
-     en,clk,rst : IN std_logic;   
-     q : OUT std_logic_vector(n-1 downto 0));
+	GENERIC(N : integer := 32);
+		PORT( 
+		EN: IN std_logic;
+		CLK: IN std_logic;
+		RST: IN std_logic;
+		D: IN std_logic_vector(N - 1 DOWNTO 0); 
+		Q: OUT std_logic_vector(N - 1 DOWNTO 0)
+		);
 END REG;
+
 
 ARCHITECTURE REG_ARCH OF REG IS
 BEGIN
-	PROCESS(clk,rst)
+	PROCESS(CLK,RST)
 	BEGIN
-		IF(rst = '1') THEN
-			q <= (others =>'0');
-		ELSIF rising_edge(clk) and en='1' THEN     
-		 	q <= d;
+		IF(RST = '1') THEN
+			Q <= (others =>'0');
+		ELSIF rising_edge(CLK) and EN = '1' THEN     
+		 	Q <= D;
 		END IF;
 	END PROCESS;
 END REG_ARCH;
