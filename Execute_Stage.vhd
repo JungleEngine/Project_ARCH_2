@@ -18,7 +18,6 @@ ENTITY EXECUTE IS
 
  		--from Decode Stage
 		ibubble_alu_buffer		: IN std_logic;--Stall signal sent by Decode stage
-		opcode_decode_stage		: IN std_logic_vector(4 DOWNTO 0);--Opcode bits sent by Decode stage
 		wb_signals,mem_signals : IN std_logic_vector(1 downto 0);
 		pc : IN std_logic_vector(8 DOWNTO 0);
 
@@ -81,7 +80,7 @@ ENTITY EXECUTE IS
 
 		result_src_addr,
 		result_dst_addr
-		: OUT std_logic_vector(2 DOWNTO 0)
+		: OUT std_logic_vector(2 DOWNTO 0);
 
 		IBUBBLE_OUT: OUT std_logic;
 		MEM_SIGNALS_OUT: OUT std_logic_vector(1 DOWNTO 0);

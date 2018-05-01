@@ -15,11 +15,6 @@ ENTITY WB IS
 		OPCODE : IN std_logic_vector(4 DOWNTO 0);
 		----------------------------------------------------------
 
-		---------------- REGISTERS SELECTION ---------------------
-		Rdst_INDEX_IN: IN std_logic_vector(2 DOWNTO 0);
-		Rsrc_INDEX_IN: IN std_logic_vector(2 DOWNTO 0);
-		----------------------------------------------------------
-
 		----------------- REGISTERS ENABLES ----------------------
 		PC_WRITE_EN: OUT std_logic;
 		FR_WRITE_EN: OUT std_logic;
@@ -58,24 +53,24 @@ BEGIN
 			OUT_BUS(15 DOWNTO 0) <= RAM_VALUE_OR_DST_RESULT;
 
 		-- Write back in SRC
-		ELSIF(WB_SIGNALS(0) = '1')
+		ELSIF(WB_SIGNALS(0) = '1') THEN
 			PC_WRITE_EN <= '0';
 			FR_WRITE_EN <= '0';
 			OUT_BUS(31 DOWNTO 16) <= SRC_RESULT;  --TODO: Check multiply write back
 			OUT_BUS(15 DOWNTO 0) <= RAM_VALUE_OR_DST_RESULT;
 
 		-- Write back in DST
-		ELSIF(WB_SIGNALS(1) = '1')	
-			IF (OPCODE = OPCODE_RET)
+		ELSIF(WB_SIGNALS(1) = '1')	THEN
+			IF (OPCODE = OPCODE_RET) THEN
 				PC_WRITE_EN <= '1';
 				FR_WRITE_EN <= '0';
 				OUT_BUS(15 DOWNTO 0) <= RAM_VALUE_OR_DST_RESULT;
-			ELSIF(OPCODE = OPCODE_RTI)
+			ELSIF(OPCODE = OPCODE_RTI) THEN
 				PC_WRITE_EN <= '1';
 				FR_WRITE_EN <= '1';
-				FR_DATA <= RAM_VALUE(15 DOWNTO 12);
+				FR_DATA <= RAM_VALUE_OR_DST_RESULT(15 DOWNTO 12);
 				OUT_BUS(15 DOWNTO 0) <= RAM_VALUE_OR_DST_RESULT;
-			ELSIF (OPCODE = OPCODE_POP or OPCODE = OPCODE_IN_PORT)
+			ELSIF (OPCODE = OPCODE_POP or OPCODE = OPCODE_IN_PORT) THEN
 				PC_WRITE_EN <= '0';
 				FR_WRITE_EN <= '0';
 				OUT_BUS(15 DOWNTO 0) <= RAM_VALUE_OR_DST_RESULT;

@@ -4,8 +4,9 @@ USE IEEE.numeric_std.all;
 USE ieee.std_logic_signed.all;
 
 entity ALU is 
-  port(	A, B:in std_logic_vector(15 downto 0 );
-  		FLAG_REG : in std_logic_vector(3 downto 0);
+  port(	
+        A, B:in std_logic_vector(15 downto 0 );
+  		    FLAG_REG : in std_logic_vector(3 downto 0);
        	SEL : IN std_logic_vector(4 downto 0);
        	FLAG_REG_INPUT : out std_logic_vector(3 downto 0);
        	FLAG_REG_WRITE : out std_logic;
@@ -70,7 +71,7 @@ ARCHITECTURE STRUCT OF ALU IS
   ----DECODING SEL --------------------------------
   -- Z-N-C
  
-  PROCESS (A, B, FLAG_REG, SEL, SIGNAL_ADDER_OUTPUT, SIGNAL_ADDER_OUTPUT)
+  PROCESS (A, B, FLAG_REG, SEL, SIGNAL_ADDER_OUTPUT)
   	--VARIABLE VARIABLE_OPERATION_OUTPUT:std_logic_vector( n downto 0);
   	VARIABLE VARIABLE_TEMP_OUTPUT:STD_LOGIC_VECTOR(15 downto 0);
 	BEGIN
@@ -204,7 +205,7 @@ ARCHITECTURE STRUCT OF ALU IS
 			END IF;
 		-------------------------------------------------------------------------
 		ELSIF SEL=CONST_OPCODE_SHL THEN
-			VARIABLE_TEMP_OUTPUT:=( B(15 downto 0 ) & '0');
+			VARIABLE_TEMP_OUTPUT:=( B(14 downto 0 ) & '0');
 			F_SRC <= (others=>'0');
 			F_DST <= VARIABLE_TEMP_OUTPUT;
 			FLAG_REG_WRITE <= '1';
