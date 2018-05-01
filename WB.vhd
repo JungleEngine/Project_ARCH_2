@@ -15,11 +15,6 @@ ENTITY WB IS
 		OPCODE : IN std_logic_vector(4 DOWNTO 0);
 		----------------------------------------------------------
 
-		---------------- REGISTERS SELECTION ---------------------
-		Rdst_INDEX_IN: IN std_logic_vector(2 DOWNTO 0);
-		Rsrc_INDEX_IN: IN std_logic_vector(2 DOWNTO 0);
-		----------------------------------------------------------
-
 		----------------- REGISTERS ENABLES ----------------------
 		PC_WRITE_EN: OUT std_logic;
 		FR_WRITE_EN: OUT std_logic;

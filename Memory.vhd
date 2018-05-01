@@ -9,7 +9,7 @@ ENTITY MEMORY IS
 		CLK:                  IN std_logic;
 		RST:                  IN std_logic;
 		MEM_SIGNALS:				 IN std_logic_vector(1 DOWNTO 0);
-		WB_SIGNALS_IN:				 IN std_logic_vector(2 DOWNTO 0);
+		WB_SIGNALS_IN:				 IN std_logic_vector(1 DOWNTO 0);
 		PREV_OPCODE:				 IN std_logic_vector(4 DOWNTO 0);
 		OPCODE_IN:					 IN std_logic_vector(4 DOWNTO 0);
 		-------------------------------------------------------------
@@ -36,7 +36,7 @@ ENTITY MEMORY IS
 		IBUBBLE_OUT:									OUT std_logic;
 		RAM_WRITE_EN:									OUT std_logic;
 		RAM_READ_EN:									OUT std_logic;
-		WB_SIGNALS_OUT:				 OUT std_logic_vector(2 DOWNTO 0);
+		WB_SIGNALS_OUT:				 OUT std_logic_vector(1 DOWNTO 0);
 		OPCODE_OUT:					 OUT std_logic_vector(4 DOWNTO 0);
 		--------------------------------------------------------------
 
@@ -44,7 +44,7 @@ ENTITY MEMORY IS
 		RAM_VALUE_or_DST_RESULT:	OUT std_logic_vector(15 DOWNTO 0);
 		SRC_RESULT:					OUT std_logic_vector(15 DOWNTO 0);
 		RAM_DATA_IN:				OUT std_logic_vector(15 DOWNTO 0);
-		RAM_ADDRESS:				OUT std_logic_vector(15 DOWNTO 0);
+		RAM_ADDRESS:				OUT std_logic_vector(8 DOWNTO 0);
 		--------------------------------------------------------------
 
 		------------------ REGISTERS SELECTION ----------------------
@@ -68,7 +68,7 @@ CONSTANT OPCODE_IN_PORT: 		std_logic_vector(4 downto 0) := "10000";
 CONSTANT OPCODE_OUT_PORT: 		std_logic_vector(4 downto 0) := "10001";
 ----------------------------------------------------------------------
 
-CONSTANT PORT_ADDRESS: std_logic_vector(15 DOWNTO 0) := "1111111100000000";
+CONSTANT PORT_ADDRESS: std_logic_vector(8 DOWNTO 0) := "111111100";
 
 SIGNAL BIT_REGISTER_INPUT: std_logic_vector(1 DOWNTO 0);
 SIGNAL INT_HANDLING_BIT: std_logic_vector(1 DOWNTO 0);
@@ -111,9 +111,9 @@ BEGIN
 	-- Address = 1 when reading int ISR (2nd step of the IBUBBLE)
 	--         = port address when OPCODE = IN/OUT instruction
 	--         = address sent by ALU || SP value 
-	RAM_ADDRESS <= ("0000000000000001") WHEN INT_HANDLING_BIT(0) = '1'
+	RAM_ADDRESS <= ("000000001") WHEN INT_HANDLING_BIT(0) = '1'
 	ELSE PORT_ADDRESS WHEN ((OPCODE_IN = OPCODE_IN_PORT) or (OPCODE_IN = OPCODE_OUT_PORT)) 
-	ELSE ADDRESS_or_SP_or_SRC_RESULT;
+	ELSE ADDRESS_or_SP_or_SRC_RESULT(8 DOWNTO 0);
 
 	-- RAM input data = previous RAM output (mem-to-mem forwarding) when (POP/LOAD -> PUSH/STORE) || (RET -> INT)
 	--                = PC when opcode = CALL
