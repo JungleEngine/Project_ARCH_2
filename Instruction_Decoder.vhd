@@ -7,7 +7,6 @@ ENTITY INSTRUCTION_DECODER IS
  PORT (	I_BUBBLE 			: in std_logic;
  		OPCODE_FROM_EXECUTE : in std_logic_vector(4 downto 0);
  		IR 					: in std_logic_vector( 15 downto 0);
-		
 		BRANCH_DETECTED  	: out std_logic;
 		SIG_POP_DETECTED 	: out std_logic;
 		SIG_PASS_SP 	: out std_logic;
@@ -146,7 +145,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		RDST <= IR(9 downto 7);
   		BRANCH_DETECTED <= '0';  
   		SIG_POP_DETECTED <= '0';
-  		SIG_PUSH_DETECTED <= '1';
+  		SIG_PASS_SP <= '1';
   		OPCODE <= CONST_OPCODE_PUSH;		
   		OUTPUT_VALUE <= (others=>'0');
   		
@@ -326,7 +325,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
       RDST <= (others=>'0');
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '1';
-      SIG_PUSH_DETECTED <= '1';
+      SIG_PASS_SP <= '1';
       OPCODE <= CONST_OPCODE_RET;   
       OUTPUT_VALUE <= (others=>'0');
 
@@ -338,7 +337,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
       RDST <= (others=>'0');
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '1';
-      SIG_PUSH_DETECTED <= '1';
+      SIG_PASS_SP <= '1';
       OPCODE <= CONST_OPCODE_RTI;   
       OUTPUT_VALUE <= (others=>'0');
   ELSE 
@@ -348,7 +347,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
       RDST <= (others=>'0');
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '0';
-      SIG_PUSH_DETECTED <= '0';
+      SIG_PASS_SP <= '0';
       OPCODE <= CONST_OPCODE_RTI;   
       OUTPUT_VALUE <= (others=>'0');    
   	END IF; 

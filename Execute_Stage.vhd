@@ -81,7 +81,7 @@ ENTITY EXECUTE IS
 
 		result_src_addr,
 		result_dst_addr
-		: OUT std_logic_vector(2 DOWNTO 0)
+		: OUT std_logic_vector(2 DOWNTO 0);
 
 		IBUBBLE_OUT: OUT std_logic;
 		MEM_SIGNALS_OUT: OUT std_logic_vector(1 DOWNTO 0);
