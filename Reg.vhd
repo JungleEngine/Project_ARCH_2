@@ -14,12 +14,15 @@ END REG;
 
 ARCHITECTURE REG_ARCH OF REG IS
 BEGIN
-	PROCESS(CLK,RST)
+	PROCESS(CLK, RST, EN)
 	BEGIN
+	  
 		IF(RST = '1') THEN
 			Q <= (others =>'0');
+			
 		ELSIF rising_edge(CLK) and EN = '1' THEN     
 		 	Q <= D;
+		 	
 		END IF;
 	END PROCESS;
 END REG_ARCH;
