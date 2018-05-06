@@ -33,9 +33,9 @@ ENTITY MEMORY IS
 
 
 		-------------------- CONTROL SIGNALS -------------------------
+		SIG_BUFFER_IBUBBLE: OUT std_logic;
 		IBUBBLE_OUT:									OUT std_logic;
 		RAM_WRITE_EN:									OUT std_logic;
-		RAM_READ_EN:									OUT std_logic;
 		WB_SIGNALS_OUT:				 OUT std_logic_vector(1 DOWNTO 0);
 		OPCODE_OUT:					 OUT std_logic_vector(4 DOWNTO 0);
 		--------------------------------------------------------------
@@ -79,7 +79,9 @@ BEGIN
 	
 	BIT_REGISTER_INPUT(0) <= '1' WHEN (INT_HANDLING_BIT(0) = '0' AND IBUBBLE_IN = '1')
 	ELSE '0';
-		
+  
+  SIG_BUFFER_IBUBBLE <= INT_HANDLING_BIT(0);
+  
 	-- Pass registers indexes to WB stage
 	Rdst_INDEX_OUT <= Rdst_INDEX_IN;
 	Rsrc_INDEX_OUT <= Rsrc_INDEX_IN;
@@ -93,19 +95,15 @@ BEGIN
 	-- Pass opcode bits to be saved in the WB buffer to be checked if the previous opcode is needed
 	OPCODE_OUT <= OPCODE_IN;
 
-	-- Save (Don't pass) IBUBBLE in 1st step of INT else pass it
 	IBUBBLE_OUT <= '0' WHEN (IBUBBLE_IN = '1' and INT_HANDLING_BIT(0) = '0')
 	ELSE IBUBBLE_IN;
-
-	-- Read from RAM when MEM_READ = '1'
-	RAM_READ_EN <= MEM_SIGNALS(0);
 
 	-- Write in RAM when MEM_WRITE || Saving PC in the 1st step of the IBUBBLE
 	RAM_WRITE_EN <= '1' WHEN (MEM_SIGNALS(1) = '1' or (INT_HANDLING_BIT(0) = '0' and IBUBBLE_IN = '1'))
 	ELSE '0';
 
 	-- Pass RAM data on read || Pass ALU data
-	RAM_VALUE_or_DST_RESULT <= RAM_DATA_OUT WHEN MEM_SIGNALS(0) = '1'
+	RAM_VALUE_or_DST_RESULT <= RAM_DATA_OUT WHEN (MEM_SIGNALS(0) = '1' or INT_HANDLING_BIT(0) = '1')
 	ELSE DATA;
 
 	-- Address = 1 when reading int ISR (2nd step of the IBUBBLE)

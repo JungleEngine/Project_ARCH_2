@@ -11,7 +11,10 @@ USE IEEE.numeric_std.all;
 
 ENTITY EXECUTE IS
  PORT (	
-
+  
+    buffered_ibubble: IN std_logic;
+    buffer_ibubble: IN std_logic;
+    
  		--from Fetch Stage
  		immediate_val_fetch_stage: IN std_logic_vector(15 DOWNTO 0);
 
@@ -188,11 +191,13 @@ BEGIN
 	result_dst_addr<=dst_addr_alu_buffer;
 
 	OPCODE_OUT <= opcode_alu_buffer;
-	IBUBBLE_OUT <= ibubble_alu_buffer;
 	MEM_SIGNALS_OUT <= mem_signals;
 	WB_SIGNALS_OUT<= wb_signals;
 	PC_OUT <= pc;
-
+  
+ 	IBUBBLE_OUT <= ibubble_alu_buffer WHEN buffer_ibubble = '0'
+	ELSE buffered_ibubble;
+  	
 	--TODO: this is not right, check all conditions and check what decode is sending
 	dec_SP <= '1' when (ibubble_alu_buffer='1' OR opcode_alu_buffer = CONST_PUSH OR opcode_alu_buffer = CONST_CALL)
 	else '0';

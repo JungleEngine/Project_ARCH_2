@@ -62,7 +62,8 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
 -- 3-MUL
 -- 4-SUB
 -- 5-AND
-  	-- For LDM , so IR now has  immediate value
+  	
+    -- For LDM , so IR now has  immediate value
   	IF OPCODE_FROM_EXECUTE = CONST_OPCODE_LDM or I_BUBBLE = '1' or IR = (x"0000") THEN 
   		MEM_SIGNALS <= (others=>'0');
   		WB_SIGNALS <= (others=>'0');
