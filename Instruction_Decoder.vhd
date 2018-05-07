@@ -4,7 +4,9 @@ USE IEEE.numeric_std.all;
 USE IEEE.STD_LOGIC_SIGNED.all;
 
 ENTITY INSTRUCTION_DECODER IS
- PORT (	I_BUBBLE 			: in std_logic;
+ PORT (	
+    BUFFERED_PC_SELECTOR_BIT : in std_logic;
+    I_BUBBLE 			: in std_logic;
  		OPCODE_FROM_EXECUTE : in std_logic_vector(4 downto 0);
  		IR 					: in std_logic_vector( 15 downto 0);
 		BRANCH_DETECTED  	: out std_logic;
@@ -54,7 +56,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
 	CONSTANT CONST_OPCODE_STD 	: std_logic_vector(4 downto 0):="11111";
 
   BEGIN
-  PROCESS(OPCODE_FROM_EXECUTE, I_BUBBLE, IR)
+  PROCESS(OPCODE_FROM_EXECUTE, I_BUBBLE, IR, BUFFERED_PC_SELECTOR_BIT)
   BEGIN  
 -- DOne : 
 -- 1-NOP
@@ -64,7 +66,7 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
 -- 5-AND
   	
     -- For LDM , so IR now has  immediate value
-  	IF OPCODE_FROM_EXECUTE = CONST_OPCODE_LDM or I_BUBBLE = '1' or IR = (x"0000") THEN 
+  	IF OPCODE_FROM_EXECUTE = CONST_OPCODE_LDM or BUFFERED_PC_SELECTOR_BIT ='1' or I_BUBBLE = '1' or IR = (x"0000") THEN 
   		MEM_SIGNALS <= (others=>'0');
   		WB_SIGNALS <= (others=>'0');
   		RSRC <= (others=>'0');
@@ -87,6 +89,8 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   		SIG_PASS_SP <= '0';
   		OPCODE <= CONST_OPCODE_LDD;		
   		OUTPUT_VALUE <= IR(10 downto 2);
+
+
 
   	-- Check store, read-write(2 bits), WB 2 bits src,dst..
   	ELSIF IR(15) = '1' and IR(1) = '1' THEN
@@ -304,6 +308,18 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
       SIG_POP_DETECTED <= '0';
       SIG_PASS_SP <= '0';
       OPCODE <= CONST_OPCODE_INC;   
+      OUTPUT_VALUE <= (others=>'0');
+
+  -- Check LOADM.
+  ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_LDM THEN
+      MEM_SIGNALS <= "00";
+      WB_SIGNALS <= "01";
+      RSRC <= (others=>'0');
+      RDST <= IR(9 downto 7);
+      BRANCH_DETECTED <= '0';  
+      SIG_POP_DETECTED <= '0';
+      SIG_PASS_SP <= '0';
+      OPCODE <= CONST_OPCODE_LDM;   
       OUTPUT_VALUE <= (others=>'0');
 
   -- Check Dec.

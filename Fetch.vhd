@@ -18,6 +18,7 @@ ENTITY FETCH IS
 		PC_WRITE:						out std_logic;
 		PC_REGISTER_INPUT:				out std_logic_vector     	(8 downto 0);
 		MEMORY_READ_ADDRESS:			out std_logic_vector     	(8 downto 0)
+       
        );
 END ENTITY FETCH;
 
