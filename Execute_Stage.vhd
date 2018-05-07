@@ -172,14 +172,15 @@ BEGIN
 		);
 
 	ALU: ENTITY work.alu PORT MAP (
-		A 				=> ALU_destination_input,
-		B 				=> ALU_source_input,
+		A 				=> ALU_source_input,
+		B 				=> ALU_destination_input,
   		FLAG_REG 		=> FR_IN_VAL,
        	SEL 			=> opcode_alu_buffer,
        	FLAG_REG_INPUT  => FR_OUT_VAL,
        	FLAG_REG_WRITE  => FR_WRITE_EN,
        	F_SRC 			=> ALU_source_output,
-       	F_DST 			=> ALU_destination_output
+       	F_DST 			=> ALU_destination_output,
+       	SHIFT_AMOUNT	=> SP_or_EA_val_alu_buffer(3 downto 0)
 		);
 
 
