@@ -15,7 +15,7 @@ ENTITY REG_FILE IS
 			WB_FR_ENABLE: IN std_logic;
 			ALU_FR_ENABLE: IN std_logic;
 			DECODE_FR_ENABLE: IN std_logic;
-      WB_WRITE_ENABLE: IN std_logic_vector(1 DOWNTO 0);
+      		WB_WRITE_ENABLE: IN std_logic_vector(1 DOWNTO 0);
       
 			WB_Rdst_INDEX: IN std_logic_vector(2 downto 0);
 			WB_Rsrc_INDEX: IN std_logic_vector(2 downto 0);
