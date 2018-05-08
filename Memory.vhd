@@ -99,17 +99,18 @@ BEGIN
 	ELSE IBUBBLE_IN;
 
 	-- Write in RAM when MEM_WRITE || Saving PC in the 1st step of the IBUBBLE
-	RAM_WRITE_EN <= '1' WHEN (MEM_SIGNALS(0) = '1' or (INT_HANDLING_BIT(0) = '0' and IBUBBLE_IN = '1'))
+	RAM_WRITE_EN <= '1' WHEN (MEM_SIGNALS(0) = '1' or RST = '1' or (INT_HANDLING_BIT(0) = '0' and IBUBBLE_IN = '1'))
 	ELSE '0';
 
 	-- Pass RAM data on read || Pass ALU data
-	RAM_VALUE_or_DST_RESULT <= RAM_DATA_OUT WHEN (MEM_SIGNALS(1) = '1' or INT_HANDLING_BIT(0) = '1')
+	RAM_VALUE_or_DST_RESULT <= RAM_DATA_OUT WHEN (MEM_SIGNALS(1) = '1' or RST = '1' or INT_HANDLING_BIT(0) = '1')
 	ELSE DATA;
 
 	-- Address = 1 when reading int ISR (2nd step of the IBUBBLE)
 	--         = port address when OPCODE = IN/OUT instruction
 	--         = address sent by ALU || SP value 
-	RAM_ADDRESS <= ("000000001") WHEN INT_HANDLING_BIT(0) = '1'
+	RAM_ADDRESS <= (OTHERS =>'0') WHEN RST = '1'
+	ELSE ("000000001") WHEN INT_HANDLING_BIT(0) = '1'
 	ELSE PORT_ADDRESS WHEN ((OPCODE_IN = OPCODE_IN_PORT) or (OPCODE_IN = OPCODE_OUT_PORT)) 
 	ELSE ADDRESS_or_SP_or_SRC_RESULT(8 DOWNTO 0);
 

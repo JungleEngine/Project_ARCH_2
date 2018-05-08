@@ -5,6 +5,7 @@ ENTITY WB IS
 	PORT(
 
 		------------------- CONTROL SIGNALS ----------------------
+		RST: IN std_logic;
 		IBUBBLE: IN std_logic;
 		WB_SIGNALS: IN std_logic_vector(1 DOWNTO 0);
 		----------------------------------------------------------
@@ -44,8 +45,9 @@ CONSTANT OPCODE_RTI: 			std_logic_vector(4 downto 0) := "11010";
 
 BEGIN
 	
-	PROCESS(WB_SIGNALS,IBUBBLE,RAM_VALUE_OR_DST_RESULT,SRC_RESULT,OPCODE)
+	PROCESS(RST,WB_SIGNALS,IBUBBLE,RAM_VALUE_OR_DST_RESULT,SRC_RESULT,OPCODE)
 	BEGIN
+
 		-- INT -> CHANGE PC WITH ISR address
 		IF(IBUBBLE = '1') THEN
 			PC_WRITE_EN <= '1';
@@ -88,7 +90,11 @@ BEGIN
 			OUT_BUS(31 DOWNTO 16) <= (OTHERS => 'Z');
 		END IF;
 
-
+	  IF(RST = '1') THEN
+	     PC_WRITE_EN <= '1';
+	     OUT_BUS(31 DOWNTO 16) <= RAM_VALUE_OR_DST_RESULT;
+	  END IF;
+	  
 		---- If WB is needed in this instruction
 		--IF(WB_SIGNALS(2) = '1') THEN
 
