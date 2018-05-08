@@ -65,7 +65,7 @@ SIGNAL SIG_BRANCH_DETECTOR_DATA : std_logic_vector(15 downto 0);
   -- Instruction decoder component.
   INSTRUCTION_DECODER: ENTITY work.INSTRUCTION_DECODER  PORT MAP 
   (-- Input.
-    BUFFERED_PC_SELECTOR_BIT,
+    BUFFERED_PC_SELECTOR_BIT
   	I_BUBBLE, 
   	OPCODE_FROM_EXECUTE,
   	IR, 

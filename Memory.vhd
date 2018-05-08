@@ -99,11 +99,11 @@ BEGIN
 	ELSE IBUBBLE_IN;
 
 	-- Write in RAM when MEM_WRITE || Saving PC in the 1st step of the IBUBBLE
-	RAM_WRITE_EN <= '1' WHEN (MEM_SIGNALS(1) = '1' or (INT_HANDLING_BIT(0) = '0' and IBUBBLE_IN = '1'))
+	RAM_WRITE_EN <= '1' WHEN (MEM_SIGNALS(0) = '1' or (INT_HANDLING_BIT(0) = '0' and IBUBBLE_IN = '1'))
 	ELSE '0';
 
 	-- Pass RAM data on read || Pass ALU data
-	RAM_VALUE_or_DST_RESULT <= RAM_DATA_OUT WHEN (MEM_SIGNALS(0) = '1' or INT_HANDLING_BIT(0) = '1')
+	RAM_VALUE_or_DST_RESULT <= RAM_DATA_OUT WHEN (MEM_SIGNALS(1) = '1' or INT_HANDLING_BIT(0) = '1')
 	ELSE DATA;
 
 	-- Address = 1 when reading int ISR (2nd step of the IBUBBLE)
