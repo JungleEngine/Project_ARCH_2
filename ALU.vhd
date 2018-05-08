@@ -211,7 +211,7 @@ ARCHITECTURE STRUCT OF ALU IS
 		ELSIF SEL=CONST_OPCODE_SHR THEN
 			F_SRC <= (others=>'0');
 			--F_DST <= std_logic_vector(shift_right(A,SHIFT_AMOUNT));
-			F_DST <= std_logic_vector(unsigned(A) sll to_integer(unsigned(SHIFT_AMOUNT)) );
+			F_DST <= std_logic_vector(shift_right(unsigned(A),to_integer(unsigned(SHIFT_AMOUNT)) ));
 			FLAG_REG_WRITE <= '0';
 		-------------------------------------------------------------------------
 		--TODO:this is wrong, this should be shifted by Immediate value
