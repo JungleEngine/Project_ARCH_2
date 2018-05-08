@@ -277,19 +277,19 @@ ARCHITECTURE ARCH OF INSTRUCTION_DECODER IS
   -- Check OUT.
   ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_OUT THEN
       MEM_SIGNALS <= "01";
-      WB_SIGNALS <= "01";
+      WB_SIGNALS <= "00";
       RSRC <= (others=>'0');
       RDST <= IR(2 downto 0);
       BRANCH_DETECTED <= '0';  
       SIG_POP_DETECTED <= '0';
       SIG_PASS_SP <= '0';
-      OPCODE <= CONST_OPCODE_IN;   
+      OPCODE <= CONST_OPCODE_OUT;   
       OUTPUT_VALUE <= (others=>'0');
 
     -- Check IN.
   ELSIF IR(15) = '0' and IR(14 downto 10) = CONST_OPCODE_IN THEN
       MEM_SIGNALS <= "10";
-      WB_SIGNALS <= "00";
+      WB_SIGNALS <= "01";
       RSRC <= (others=>'0');
       RDST <= IR(2 downto 0);
       BRANCH_DETECTED <= '0';  
