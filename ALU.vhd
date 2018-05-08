@@ -30,7 +30,7 @@ ARCHITECTURE STRUCT OF ALU IS
   SIGNAL SIGNAL_ADDER_OUTPUT:STD_LOGIC_VECTOR(15 downto 0);	
   SIGNAL SIGNAL_ADDER_CARRY_OUTPUT:STD_LOGIC;	
   SIGNAL SIGNAL_ADDER_CARRY_CIN:STD_LOGIC;
-  SIGNAL MUL_RESULT:STD_LOGIC_VECTOR(31 downto 0);
+  --SIGNAL MUL_RESULT:STD_LOGIC_VECTOR(31 downto 0);
   --constants
    	-- OPcodes constants.
 	CONSTANT CONST_OPCODE_NOP 	: std_logic_vector(4 downto 0):="00000";
@@ -74,12 +74,14 @@ ARCHITECTURE STRUCT OF ALU IS
   PROCESS (A, B, FLAG_REG, SEL, SIGNAL_ADDER_OUTPUT)
   	--VARIABLE VARIABLE_OPERATION_OUTPUT:std_logic_vector( n downto 0);
   	VARIABLE VARIABLE_TEMP_OUTPUT:STD_LOGIC_VECTOR(15 downto 0);
+  	VARIABLE MUL_RESULT:STD_LOGIC_VECTOR(31 downto 0);
 	BEGIN
-		
+
 		SIGNAL_FLAG_REGISTER_OUTPUT <= SIGNAL_FLAG_REGISTER_INPUT;
 
 		IF SEL=CONST_OPCODE_MUL THEN
-			MUL_RESULT<=A*B;
+			--MUL_RESULT<=std_logic_vector(to_unsigned(to_integer(unsigned(A))*to_integer(unsigned(B)),32));
+			MUL_RESULT:=A*B;
 			F_SRC <= MUL_RESULT(31 downto 16);
 			F_DST <= MUL_RESULT(15 downto 0);
 			FLAG_REG_WRITE <= '0';
@@ -91,7 +93,7 @@ ARCHITECTURE STRUCT OF ALU IS
 			F_SRC <= (others=>'0');
 			F_DST <= (others=>'0');
 			FLAG_REG_WRITE <= '0';
-			
+
 			--------------------------------------------------------------------
 		ELSIF SEL=CONST_OPCODE_DEC THEN
 			SIGNAL_ADDER_A<=B;
@@ -128,7 +130,7 @@ ARCHITECTURE STRUCT OF ALU IS
 			F_SRC <= (others=>'0');
 			F_DST <= SIGNAL_ADDER_OUTPUT;
 			FLAG_REG_WRITE <= '1';	
-			SIGNAL_ADDER_OUTPUT(1)<= SIGNAL_ADDER_OUTPUT(15);	
+			SIGNAL_FLAG_REGISTER_OUTPUT(1)<= SIGNAL_ADDER_OUTPUT(15);	
 			IF ( SIGNAL_ADDER_OUTPUT(15 downto 0)=(x"0000")) THEN 
 				SIGNAL_FLAG_REGISTER_INPUT(0) <= '1';
 				ELSE	SIGNAL_FLAG_REGISTER_INPUT(0) <= '0';
@@ -151,7 +153,7 @@ ARCHITECTURE STRUCT OF ALU IS
 			--SIGNAL_FLAG_REGISTER_INPUT(2) <= SIGNAL_ADDER_CARRY_OUTPUT;
 			----------------------------------------------------------------------
 			------------------------------------------------------
-								
+
 		ELSIF SEL=CONST_OPCODE_SUB THEN
 			SIGNAL_ADDER_B<=(not B);
 			SIGNAL_ADDER_A<= A;
@@ -168,7 +170,7 @@ ARCHITECTURE STRUCT OF ALU IS
 
 			--------------------------------------------------------------------
 			---------------------------------------------------------------------
-		
+
 		ELSIF SEL=CONST_OPCODE_OR THEN
 			VARIABLE_TEMP_OUTPUT:= A OR B;
 			F_SRC<=(others=>'0');
@@ -181,7 +183,7 @@ ARCHITECTURE STRUCT OF ALU IS
 				ELSE	SIGNAL_FLAG_REGISTER_INPUT(0) <= '0';
 			END IF;
 
-        
+
 		ELSIF SEL=CONST_OPCODE_AND THEN
 			VARIABLE_TEMP_OUTPUT:=A AND B;
 			F_SRC<=(others=>'0');
@@ -261,9 +263,9 @@ ARCHITECTURE STRUCT OF ALU IS
 			F_DST <= B;
 			FLAG_REG_WRITE <= '0';
 		END IF;
-       
+
   END PROCESS;
-  
+
 
 
 END STRUCT;
