@@ -333,8 +333,8 @@ BEGIN
  		dst_addr_alu_buffer			=> DECODE_EXECUTE_OUT_Rdst_INDEX,
  		opcode_alu_buffer			=> DECODE_EXECUTE_OUT_OPCODE,
  		SP_or_EA_val_alu_buffer		=> DECODE_EXECUTE_OUT_EA_OR_SP_SH_VALUE,
- 		wb_ctrl_sig_src_mem_buffer	=> EXECUTE_MEMORY_OUT_WB_SIGNALS(0),--TODO
-		wb_ctrl_sig_dst_mem_buffer 	=> EXECUTE_MEMORY_OUT_WB_SIGNALS(1),--TODO
+ 		wb_ctrl_sig_src_mem_buffer	=> EXECUTE_MEMORY_OUT_WB_SIGNALS(1),--TODO
+		wb_ctrl_sig_dst_mem_buffer 	=> EXECUTE_MEMORY_OUT_WB_SIGNALS(0),--TODO
 		src_addr_mem_buffer			=> EXECUTE_MEMORY_OUT_Rsrc_INDEX,
 		dst_addr_mem_buffer			=> EXECUTE_MEMORY_OUT_Rdst_INDEX,
 		result_src_val_mem_buffer	=> EXECUTE_MEMORY_OUT_ADDRESS_SP_SRCRESULT,
@@ -343,7 +343,7 @@ BEGIN
 		dst_addr_wb_buffer			=> MEMORY_WRITEBACK_OUT_Rsrc_INDEX,
 		src_val_wb_buffer			=> MEMORY_WRITEBACK_OUT_SRC_RESULT,
 		dst_val_wb_buffer			=> MEMORY_WRITEBACK_OUT_RAM_VALUE_or_DST_RESULT,
-		wb_ctrl_sig_src_wb_buffer	=> MEMORY_WRITEBACK_OUT_WB_SIGNALS(0),
+		wb_ctrl_sig_src_wb_buffer	=> MEMORY_WRITEBACK_OUT_WB_SIGNALS(1),
 		wb_ctrl_sig_dst_wb_buffer	=> MEMORY_WRITEBACK_OUT_WB_SIGNALS(0),
 		src_val_reg_file			=> REGISTERS_ALU_BUS(15 DOWNTO 0),
 		dst_val_reg_file			=> REGISTERS_ALU_BUS(31 DOWNTO 16),
