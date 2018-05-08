@@ -50,9 +50,9 @@ ARCHITECTURE alu_operands_selection_arch OF alu_operands_selection IS
 
 BEGIN
 	ALU_source_input <= 
-		src_val_wb_buffer	when (src_in_wb_buffer_src='1')
+		src_val_wb_buffer						when (src_in_wb_buffer_src='1')
 	else		
-		dst_val_wb_buffer	when (src_in_wb_buffer_dst='1')
+		dst_val_wb_buffer						when (src_in_wb_buffer_dst='1')
 	else
 		result_src_val_mem_buffer 				when (src_in_mem_buffer_src='1')
 	else
@@ -61,11 +61,11 @@ BEGIN
 		src_val_reg_file;
 
 	ALU_destination_input <=
-		src_val_wb_buffer	when (src_in_wb_buffer_src='1')
-	else		
-		dst_val_wb_buffer	when (dst_in_wb_buffer_dst='1')
-	else
 		immediate_val_fetch_stage 				when (dst_in_immediate='1')
+	else
+		src_val_wb_buffer						when (dst_in_wb_buffer_src='1')
+	else		
+		dst_val_wb_buffer						when (dst_in_wb_buffer_dst='1')
 	else
 		result_src_val_mem_buffer 				when (dst_in_mem_buffer_src='1')
 	else
