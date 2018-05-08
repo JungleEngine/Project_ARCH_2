@@ -193,7 +193,7 @@ ARCHITECTURE STRUCT OF ALU IS
 			IF ( SIGNAL_ADDER_OUTPUT(15 downto 0)=(x"0000")) THEN 
 				SIGNAL_FLAG_REGISTER_INPUT(0) <= '1';
 				ELSE	SIGNAL_FLAG_REGISTER_INPUT(0) <= '0';
-			END IF;	
+			END IF;
 		-------------------------------------------------------------------------
 		------------------------------------------------------------------------
 		ELSIF SEL=CONST_OPCODE_RRC THEN
